@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scan Your Crop — AgriSmart AI</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <header class="page-header">
+      <h1>Scan Your Crop</h1>
+      <p class="page-sub">Upload a clear photo of your crop leaf for AI-powered analysis.</p>
+    </header>
+
+    <p id="scan-alert" class="alert alert-error hidden" role="alert"></p>
+
+    <section id="upload-panel" class="card">
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop a crop image or press to choose a file">
+        <div class="icon-wrap" style="margin:0 auto 1rem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 16V6M8 10l4-4 4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        </div>
+        <h2>Drop your crop image here</h2>
+        <p class="muted">or choose an image from your device</p>
+        <p class="muted">JPG, JPEG, PNG, or WEBP · Max 10 MB</p>
+        <div class="hero-actions" style="justify-content:center">
+          <button class="btn btn-primary" type="button" id="choose-btn">Choose Image</button>
+          <button class="btn btn-secondary" type="button" id="camera-btn">Use Camera</button>
+        </div>
+      </div>
+      <input class="visually-hidden" id="file-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+      <input class="visually-hidden" id="camera-input" type="file" accept="image/*" capture="environment">
+    </section>
+
+    <section id="preview-panel" class="card preview-card hidden" style="margin-top:1rem">
+      <img id="preview-image" alt="Selected crop image preview">
+      <p><strong id="file-name"></strong></p>
+      <p class="muted" id="file-size"></p>
+      <div class="actions-row">
+        <button class="btn btn-primary" type="button" id="analyze-btn" disabled>Analyze Crop</button>
+        <button class="btn btn-ghost" type="button" id="remove-btn">Remove</button>
+      </div>
+    </section>
+
+    <section id="loading-panel" class="card loading-panel hidden" style="margin-top:1rem" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <h2>Analyzing your crop...</h2>
+      <p class="muted">This is a demonstration analysis using mock results.</p>
+      <ol class="progress-steps" id="progress-steps">
+        <li>Image uploaded</li>
+        <li>Image preprocessing</li>
+        <li>Detecting crop condition</li>
+        <li>Generating recommendations</li>
+      </ol>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/mock-api.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/scan.js" defer></script>
+</body>
+</html>

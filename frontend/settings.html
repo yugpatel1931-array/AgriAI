@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings — AgriSmart AI</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main id="main" class="container">
+    <header class="page-header">
+      <h1>Settings</h1>
+      <p class="page-sub">Preferences are saved on this device. Authentication is not enabled yet.</p>
+    </header>
+
+    <form id="settings-form" class="settings-stack">
+      <section class="card">
+        <h2>Profile</h2>
+        <label class="field">Farmer name
+          <input id="farmerName" name="farmerName" maxlength="80" autocomplete="name">
+        </label>
+        <label class="field" style="margin-top:0.8rem">Farm name
+          <input id="farmName" name="farmName" maxlength="80">
+        </label>
+        <label class="field" style="margin-top:0.8rem">Location
+          <input id="location" name="location" maxlength="80">
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Preferences</h2>
+        <label class="field">Language
+          <select id="language" name="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi (labels stay English in this demo)</option>
+          </select>
+        </label>
+        <label class="field" style="margin-top:0.8rem">Theme
+          <select id="theme" name="theme">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label style="display:flex;gap:0.6rem;align-items:center;margin-top:1rem">
+          <input type="checkbox" id="notifications" name="notifications">
+          Enable scan reminders on this device
+        </label>
+      </section>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" type="submit">Save settings</button>
+      </div>
+    </form>
+
+    <section class="card" style="margin-top:1rem;max-width:720px">
+      <h2>Application</h2>
+      <p class="muted">Clearing history removes saved scans from this browser only.</p>
+      <button class="btn btn-danger" type="button" id="clear-history">Clear scan history</button>
+    </section>
+
+    <section class="card" style="margin-top:1rem;max-width:720px">
+      <h2>About AgriSmart AI</h2>
+      <p>AgriSmart AI is a Smart India Hackathon project that helps farmers inspect crop health using image analysis. This frontend currently uses mock results so the product flow can be tested without a live model.</p>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/mock-api.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/settings.js" defer></script>
+</body>
+</html>

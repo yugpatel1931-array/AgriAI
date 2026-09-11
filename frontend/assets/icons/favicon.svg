@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="AgriSmart AI">
+  <rect width="32" height="32" rx="8" fill="#1F7A4D"/>
+  <path d="M16 6c5.2 3.2 8 7.6 8 13.2-2.4-1.6-5.1-2.4-8-2.4s-5.6.8-8 2.4C8 13.6 10.8 9.2 16 6z" fill="#F6F4EF"/>
+  <path d="M16 16.8V26" stroke="#C4A35A" stroke-width="2" stroke-linecap="round"/>
+</svg>
