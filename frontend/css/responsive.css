@@ -1,88 +1,179 @@
+/* ==========================================================================
+   AGRISMART AI — RESPONSIVE & MOBILE DESIGN
+   Breakpoints: 1024px (Tablet / Small Desktop), 768px (Tablet / Mobile Drawer), 480px (Mobile)
+   ========================================================================== */
+
+/* --- TABLET (<= 1024px) --- */
 @media (max-width: 1024px) {
-  .grid-4,
-  .kpis {
+  .hero-split {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 3rem 0;
+  }
+
+  .hero-image-wrap {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .scan-row {
-    grid-template-columns: 1fr 1fr;
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .result-split {
+    grid-template-columns: 1fr;
   }
 }
 
+/* --- MOBILE & TABLET DRAWER (<= 768px) --- */
 @media (max-width: 768px) {
-  .nav {
-    flex-wrap: wrap;
+  /* Green Sidebar moves into a mobile drawer */
+  .app-sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+    z-index: 300;
   }
 
-  .menu-toggle {
-    display: inline-grid;
-    place-items: center;
+  .app-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
   }
 
-  .nav-links,
-  .nav-cta {
-    display: none;
-    width: 100%;
+  .sidebar-backdrop.is-open {
+    display: block;
   }
 
-  .nav.is-open .nav-links {
-    display: grid;
-    gap: 0.45rem;
-    padding: 0.4rem 0 0.8rem;
+  /* Topbar spans full width */
+  .app-topbar {
+    left: 0;
+    padding: 0 1rem;
   }
 
-  .nav.is-open .nav-cta {
+  .sidebar-toggle-btn {
     display: flex;
-    padding-bottom: 0.8rem;
+    align-items: center;
+    justify-content: center;
   }
 
-  .hero-grid,
-  .grid-3,
-  .grid-2,
-  .steps,
-  .footer-grid,
-  .result-hero {
+  .topbar-search {
+    display: none; /* Hide large search on small screens to make room for actions */
+  }
+
+  /* Main viewport resets left margin */
+  body.has-sidebar main#main,
+  body.has-sidebar .app-viewport {
+    margin-left: 0;
+    padding: 1.25rem 1rem 3rem;
+    padding-top: 85px;
+  }
+
+  /* Landing Header Mobile */
+  .landing-links {
+    display: none; /* Mobile menu handles this */
+  }
+
+  .hero-heading {
+    font-size: 2.35rem;
+  }
+
+  .scan-methods {
     grid-template-columns: 1fr;
   }
 
-  .hero {
-    padding-top: 2rem;
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .scan-promo {
+  .farm-health-card {
     flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 425px) {
-  .kpis,
-  .grid-4,
-  .result-stats,
-  .scan-row {
-    grid-template-columns: 1fr;
+    text-align: center;
   }
 
   .meter-row {
+    grid-template-columns: 100px 1fr 40px;
+    font-size: 0.85rem;
+  }
+
+  .toolbar {
+    flex-direction: column;
+  }
+
+  .field {
+    min-width: 100%;
+  }
+
+  .quote-text {
+    font-size: 1.35rem;
+  }
+}
+
+/* --- SMALL MOBILE (<= 480px) --- */
+@media (max-width: 480px) {
+  .hero-heading {
+    font-size: 2rem;
+  }
+
+  .features-grid {
     grid-template-columns: 1fr;
   }
 
-  .hero-actions,
-  .actions-row {
-    display: grid;
+  .kpi-grid {
+    grid-template-columns: 1fr;
   }
 
   .btn {
     width: 100%;
   }
 
-  .nav-cta .btn {
-    width: auto;
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
   }
-}
 
-@media (max-width: 320px) {
-  .container {
-    width: min(var(--max), calc(100% - 1.2rem));
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .modal-card {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .scan-laser-wrap {
+    width: 170px;
+    height: 170px;
+  }
+
+  /* Khedut Mitr Mobile */
+  .khedut-mitr-launcher {
+    bottom: 16px;
+    right: 16px;
+    padding: 0.5rem 0.9rem 0.5rem 0.5rem;
+  }
+
+  .khedut-mitr-launcher-sub {
+    display: none;
+  }
+
+  .khedut-mitr-window {
+    right: 8px;
+    left: 8px;
+    width: auto;
+    max-width: none;
+    bottom: 76px;
+    height: 75vh;
   }
 }

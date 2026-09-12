@@ -3,63 +3,242 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scan Your Crop — AgriSmart AI</title>
+  <title>Scan Crop — AgriSmart AI</title>
+  <meta name="description" content="Instant AI crop disease scanner. Take a photo or upload an image of foliage for instant neural diagnostic analysis.">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
   <div id="site-header"></div>
-  <main id="main" class="container">
-    <header class="page-header">
-      <h1>Scan Your Crop</h1>
-      <p class="page-sub">Upload a clear photo of your crop leaf for AI-powered analysis.</p>
-    </header>
 
-    <p id="scan-alert" class="alert alert-error hidden" role="alert"></p>
-
-    <section id="upload-panel" class="card">
-      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop a crop image or press to choose a file">
-        <div class="icon-wrap" style="margin:0 auto 1rem">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 16V6M8 10l4-4 4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+  <main id="main">
+    <div class="scan-flow-wrap">
+      <!-- HEADER -->
+      <div style="margin-bottom:2rem;">
+        <div class="eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>AI Computer Vision Diagnostics</span>
         </div>
-        <h2>Drop your crop image here</h2>
-        <p class="muted">or choose an image from your device</p>
-        <p class="muted">JPG, JPEG, PNG, or WEBP · Max 10 MB</p>
-        <div class="hero-actions" style="justify-content:center">
-          <button class="btn btn-primary" type="button" id="choose-btn">Choose Image</button>
-          <button class="btn btn-secondary" type="button" id="camera-btn">Use Camera</button>
+        <h1 style="font-size:2.2rem;margin-bottom:0.4rem;">Scan Your Crop</h1>
+        <p class="lead" style="font-size:1.05rem;margin-bottom:0;">Take or upload a clear photo of the affected plant leaf for instant pathology analysis.</p>
+      </div>
+
+      <!-- ERROR ALERT -->
+      <div id="scan-alert" class="alert alert-error hidden" role="alert"></div>
+
+      <!-- STEP 1: METHOD SELECTION & DROPZONE -->
+      <div id="upload-panel">
+        <div class="scan-methods">
+          <div class="scan-method-card" id="camera-card" role="button" tabindex="0">
+            <div class="scan-method-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div>
+              <h3 style="margin-bottom:0.25rem;">Take a Photo</h3>
+              <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1rem;">Capture live foliage in the field using your phone camera</p>
+            </div>
+            <button class="btn btn-primary btn-sm" type="button" id="camera-btn">
+              <span>Open Camera</span>
+            </button>
+          </div>
+
+          <div class="scan-method-card" id="upload-card" role="button" tabindex="0">
+            <div class="scan-method-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div>
+              <h3 style="margin-bottom:0.25rem;">Upload Image</h3>
+              <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1rem;">Select a photo from your phone gallery or desktop files</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="button" id="choose-btn">
+              <span>Browse Files</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- DRAG AND DROP ZONE -->
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Dropzone for crop image upload">
+          <div class="dropzone-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <h3 style="font-size:1.15rem;margin-bottom:0.3rem;">Or drop your leaf photo here</h3>
+          <p style="font-size:0.88rem;color:var(--text-subtle);margin-bottom:0;">Supports JPG, PNG, WEBP up to 10 MB &bull; Ensure natural, even lighting</p>
+        </div>
+
+        <!-- HIDDEN FILE INPUTS -->
+        <input type="file" id="file-input" class="visually-hidden" accept="image/jpeg,image/png,image/webp">
+        <input type="file" id="camera-input" class="visually-hidden" accept="image/*" capture="environment">
+      </div>
+
+      <!-- STEP 2: PREVIEW & OPTIONAL FIELD DETAILS -->
+      <div id="preview-panel" class="hidden">
+        <div class="preview-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.8rem;">
+            <div>
+              <h3 style="margin-bottom:0.2rem;">Image Selected</h3>
+              <div style="font-size:0.88rem;color:var(--text-muted);">
+                <span id="file-name" style="font-weight:600;color:var(--text-main);">filename.jpg</span>
+                &bull; <span id="file-size">0 KB</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="button" id="remove-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Choose Another Image</span>
+            </button>
+          </div>
+
+          <div class="preview-image-box">
+            <img id="preview-image" alt="Selected leaf preview">
+          </div>
+
+          <!-- OPTIONAL FIELD CONTEXT -->
+          <div style="margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+            <h4 style="margin-bottom:0.3rem;display:flex;align-items:center;gap:0.5rem;">
+              <span>Field Context</span>
+              <span class="badge badge-low" style="font-size:0.7rem;font-weight:600;">Optional &bull; Enhances Accuracy</span>
+            </h4>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.2rem;">Providing crop and symptom cues helps refine the AI diagnostic confidence.</p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:1rem;margin-bottom:1.2rem;">
+              <div class="field">
+                <label for="crop-type-hint">Crop Type</label>
+                <select id="crop-type-hint">
+                  <option value="">-- Select Crop (or let AI detect) --</option>
+                  <option value="Tomato">Tomato (Tamatar)</option>
+                  <option value="Potato">Potato (Aaloo)</option>
+                  <option value="Wheat">Wheat (Gehu)</option>
+                  <option value="Cotton">Cotton (Kapas)</option>
+                  <option value="Corn">Corn / Maize (Makka)</option>
+                  <option value="Chilli">Chilli (Mirchi)</option>
+                  <option value="Rice">Rice / Paddy (Dhan)</option>
+                  <option value="Other">Other Foliage</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="crop-stage-hint">Plant Part / Stage</label>
+                <select id="crop-stage-hint">
+                  <option value="Leaf">Leaf / Foliage</option>
+                  <option value="Stem">Stem / Vine</option>
+                  <option value="Fruit">Fruit / Pod</option>
+                  <option value="Flower">Flower / Bud</option>
+                  <option value="Seedling">Young Seedling</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-bottom:1.2rem;">
+              <label style="font-size:0.88rem;font-weight:600;display:block;margin-bottom:0.4rem;">Observed Symptoms (Click to tag)</label>
+              <div class="symptom-chips" id="symptom-chips-wrap">
+                <span class="symptom-chip" data-tag="Yellowing">🟡 Yellowing / Chlorosis</span>
+                <span class="symptom-chip" data-tag="Dark Spots">🟤 Dark Spots / Rings</span>
+                <span class="symptom-chip" data-tag="Wilting">🍂 Wilting / Drooping</span>
+                <span class="symptom-chip" data-tag="Powdery Mildew">⚪ Powdery White Coating</span>
+                <span class="symptom-chip" data-tag="Curling">🔄 Leaf Curling</span>
+                <span class="symptom-chip" data-tag="Rot">🪰 Browning / Rot</span>
+              </div>
+            </div>
+
+            <div class="field" style="margin-bottom:1.5rem;">
+              <label for="crop-notes-hint">Field Observations / Notes</label>
+              <textarea id="crop-notes-hint" rows="2" placeholder="e.g. Symptoms noticed after heavy rain on lower leaves..."></textarea>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+            <button class="btn btn-primary btn-lg" type="button" id="analyze-btn" style="width:100%;max-width:320px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span>Analyze Crop with AI &rarr;</span>
+            </button>
+          </div>
         </div>
       </div>
-      <input class="visually-hidden" id="file-input" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
-      <input class="visually-hidden" id="camera-input" type="file" accept="image/*" capture="environment">
-    </section>
 
-    <section id="preview-panel" class="card preview-card hidden" style="margin-top:1rem">
-      <img id="preview-image" alt="Selected crop image preview">
-      <p><strong id="file-name"></strong></p>
-      <p class="muted" id="file-size"></p>
-      <div class="actions-row">
-        <button class="btn btn-primary" type="button" id="analyze-btn" disabled>Analyze Crop</button>
-        <button class="btn btn-ghost" type="button" id="remove-btn">Remove</button>
+      <!-- STEP 3: AI SCANNING ANIMATION HUD -->
+      <div id="loading-panel" class="hidden">
+        <div class="ai-scanner-hud">
+          <div class="scan-laser-wrap">
+            <div class="radar-spinner"></div>
+            <div class="scan-laser-line"></div>
+            <img id="loading-image" alt="Scanning preview" style="width:180px;height:180px;border-radius:50%;object-fit:cover;opacity:0.85;">
+          </div>
+
+          <div class="eyebrow" style="color:var(--fresh);justify-content:center;">
+            <span class="pulse-dot"></span>
+            <span>Deep Neural Diagnostics</span>
+          </div>
+
+          <h2 id="loading-headline" style="color:#FFFFFF;margin-bottom:0.8rem;font-size:1.8rem;">
+            Analyzing Foliar Pathology...
+          </h2>
+          <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto 1.8rem;font-size:0.92rem;">
+            Cross-referencing leaf pigment patterns, lesion geometry, and fungal spore profiles.
+          </p>
+
+          <div class="confidence-bar" style="max-width:480px;margin:0 auto 1.8rem;background:rgba(255,255,255,0.12);">
+            <div class="confidence-bar-fill" id="scan-progress-fill" style="width:15%;transition:width 0.4s ease;"></div>
+          </div>
+
+          <ul class="hud-steps" id="progress-steps">
+            <li class="hud-step-item" id="step-0">
+              <span class="hud-step-icon">1</span>
+              <span>Image Preprocessing & Foliage Isolation</span>
+            </li>
+            <li class="hud-step-item" id="step-1">
+              <span class="hud-step-icon">2</span>
+              <span>Crop Species & Tissue Identification</span>
+            </li>
+            <li class="hud-step-item" id="step-2">
+              <span class="hud-step-icon">3</span>
+              <span>Deep Learning Foliar Pathology Analysis</span>
+            </li>
+            <li class="hud-step-item" id="step-3">
+              <span class="hud-step-icon">4</span>
+              <span>Formulating Organic & Chemical Treatment Plans</span>
+            </li>
+          </ul>
+        </div>
       </div>
-    </section>
+    </div>
+    <!-- CAMERA ACCESS PERMISSION MODAL -->
+    <div class="modal-backdrop hidden" id="camera-permission-modal" role="dialog" aria-modal="true" aria-labelledby="camera-perm-title">
+      <div class="modal-card" style="max-width:440px;text-align:center;padding:2.2rem 2rem;">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(82,183,136,0.18);color:var(--leaf);display:grid;place-items:center;margin:0 auto 1.2rem;box-shadow:0 4px 16px rgba(82,183,136,0.25);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <h3 id="camera-perm-title" style="font-size:1.35rem;margin-bottom:0.5rem;color:var(--text-main);">Camera Permission</h3>
+        <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.5;margin-bottom:1.2rem;">
+          AgriSmart AI needs access to your device camera to photograph crop leaves and detect foliar diseases directly in the field.
+        </p>
 
-    <section id="loading-panel" class="card loading-panel hidden" style="margin-top:1rem" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <h2>Analyzing your crop...</h2>
-      <p class="muted">This is a demonstration analysis using mock results.</p>
-      <ol class="progress-steps" id="progress-steps">
-        <li>Image uploaded</li>
-        <li>Image preprocessing</li>
-        <li>Detecting crop condition</li>
-        <li>Generating recommendations</li>
-      </ol>
-    </section>
+        <div style="background:var(--bg-sand);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;text-align:left;font-size:0.8rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.45;">
+          <div style="font-weight:700;color:var(--text-main);margin-bottom:0.25rem;">📸 Foliar Photo Guidelines:</div>
+          <div>&bull; Hold camera 10&ndash;15 cm from infected foliage</div>
+          <div>&bull; Ensure steady natural lighting without heavy shadows</div>
+          <div>&bull; Focus on the lesion or discolored area</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <button class="btn btn-primary" id="btn-allow-camera" type="button" style="width:100%;font-weight:700;padding:0.85rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span>Allow Access &amp; Open Camera</span>
+          </button>
+          <button class="btn btn-secondary" id="btn-choose-file-instead" type="button" style="width:100%;">
+            <span>Choose from Gallery / Files Instead</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btn-cancel-camera" type="button" style="width:100%;">
+            <span>Cancel</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </main>
+
   <div id="site-footer"></div>
-  <script src="js/mock-api.js" defer></script>
-  <script src="js/app.js" defer></script>
-  <script src="js/scan.js" defer></script>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/scan.js"></script>
 </body>
 </html>

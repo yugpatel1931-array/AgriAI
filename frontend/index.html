@@ -3,109 +3,167 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AgriSmart AI — Smarter Crop Health</title>
-  <meta name="description" content="Identify crop diseases early and get actionable plant health insights with AgriSmart AI.">
+  <title>AgriSmart AI — Healthy Crops, Brighter Tomorrows</title>
+  <meta name="description" content="AI-assisted foliar plant pathology and sustainable crop protection for Indian agriculture. Instant leaf diagnosis, verified remedies, and living farm health monitoring.">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
   <div id="site-header"></div>
+
   <main id="main">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <p class="eyebrow">Agriculture × AI</p>
-          <h1>Smarter Crop Health with AI</h1>
-          <p class="lead">Identify crop diseases early, understand plant health, and get actionable insights with AI-powered analysis.</p>
+    <!-- SPLIT HERO SECTION -->
+    <section class="hero-split-wrap">
+      <div class="container hero-split">
+        <div class="hero-content">
+          <div class="eyebrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span>Smart India Hackathon &bull; Computer Vision 2.0</span>
+          </div>
+          <h1 class="hero-heading">
+            Healthy Crops,
+            <span class="hero-heading-highlight">Brighter Tomorrows</span>
+          </h1>
+          <p class="lead">
+            Detect foliar plant diseases in seconds with deep learning computer vision. Protect your yields, receive verified organic & chemical remedies, and build a sustainable harvest for greener tomorrows.
+          </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="scan.html">Scan Your Crop</a>
-            <a class="btn btn-secondary" href="dashboard.html">Explore Dashboard</a>
+            <a class="btn btn-primary btn-lg" href="scan.html" style="box-shadow: 0 4px 18px rgba(45,106,79,0.35);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span>Scan Crop Now</span>
+            </a>
+            <a class="btn btn-secondary btn-lg hero-auth-btn" href="login.html" id="hero-auth-cta" style="border:2px solid var(--border);background:var(--bg-surface);font-weight:700;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Farmer Login / Sign Up</span>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#features">
+              <span>Learn More &darr;</span>
+            </a>
+          </div>
+          <div style="font-size:0.85rem;color:var(--text-subtle);display:flex;align-items:center;gap:0.5rem;margin-top:0.4rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--leaf)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>100% Guest-First &bull; Works in the Field &bull; Instant Analysis &bull; No Setup</span>
           </div>
         </div>
-        <div class="hero-visual">
-          <img src="assets/images/hero-field.svg" alt="Stylized crop field with an AI health overlay" width="640" height="420">
+
+        <div class="hero-image-wrap">
+          <img src="assets/images/hero-plant-hands.jpg" alt="Young green plant growing in dark soil held in farmer's cupped hands with sunlight and field background" width="600" height="450">
+          <div class="hero-floating-badge">
+            <span class="pulse-dot"></span>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;color:var(--forest-mid);letter-spacing:0.04em;">Live AI Vision</div>
+              <div style="font-weight:700;font-size:0.95rem;color:var(--text-main);">Tomato &bull; Early Blight Detected (92%)</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
       <div class="container">
-        <div class="section-head">
-          <h2>Built for timely field decisions</h2>
-          <p class="muted">A simple workflow that helps farmers capture, analyze, and track crop health.</p>
+        <div class="section-header">
+          <span class="eyebrow">Key Capabilities</span>
+          <h2>Intelligent Agricultural Pathology</h2>
+          <p class="lead">Engineered specifically for smallholder and commercial farmers navigating real field conditions across India.</p>
         </div>
-        <div class="grid-3">
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></svg>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <h3>AI Crop Disease Detection</h3>
-            <p class="muted">Upload a leaf image and receive a demonstration diagnosis with confidence and risk context.</p>
-          </article>
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+            <h3>Instant Foliar Detection</h3>
+            <p>Upload a leaf image or take a real-time photo to isolate lesions, fungal rusts, and bacterial blights in under 2 seconds.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
             </div>
-            <h3>Fast Analysis</h3>
-            <p class="muted">No app install and no heavy libraries. The interface stays light so you can scan quickly.</p>
-          </article>
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>
+            <h3>Dual Treatment Protocols</h3>
+            <p>Balanced advisory providing organic/biological alternatives (neem oil, Trichoderma) alongside calibrated chemical fungicides.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </div>
-            <h3>Crop Health Monitoring</h3>
-            <p class="muted">See healthy vs at-risk scans at a glance on the farmer dashboard.</p>
-          </article>
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/></svg>
+            <h3>Living Farm History</h3>
+            <p>All scans and diagnoses are saved privately in your browser storage. Track disease progression across growing seasons without friction.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             </div>
-            <h3>Scan History</h3>
-            <p class="muted">Keep a local record of previous scans, filters, and results on this device.</p>
-          </article>
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            </div>
-            <h3>Smart Recommendations</h3>
-            <p class="muted">Get practical next steps presented as informational guidance, not prescriptions.</p>
-          </article>
-          <article class="card">
-            <div class="icon-wrap" aria-hidden="true">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            </div>
-            <h3>Farm Insights</h3>
-            <p class="muted">Spot common issues and overall health trends across your stored scans.</p>
-          </article>
+            <h3>Field-First & Offline Ready</h3>
+            <p>Zero heavy frameworks. Built in lightweight Vanilla HTML/CSS/JS optimized for low-bandwidth 2G/3G connectivity in remote areas.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <!-- HOW IT WORKS SECTION -->
+    <section class="steps-section" id="how-it-works">
       <div class="container">
-        <div class="section-head">
-          <h2>How it works</h2>
+        <div class="section-header">
+          <span class="eyebrow">Workflow</span>
+          <h2>Three Steps to Crop Protection</h2>
+          <p class="lead">Accurate diagnostics in the palm of your hand without expensive equipment.</p>
         </div>
-        <div class="steps">
-          <article class="card step">
-            <h3>Capture or upload</h3>
-            <p class="muted">Take a clear photo of a crop leaf or choose an image from your device.</p>
-          </article>
-          <article class="card step">
-            <h3>AI analyzes the crop</h3>
-            <p class="muted">The assistant reviews visual patterns and returns a structured health result.</p>
-          </article>
-          <article class="card step">
-            <h3>Get insights</h3>
-            <p class="muted">Read the diagnosis, risk level, and recommended follow-up actions.</p>
-          </article>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">01</span>
+            <h3 style="margin-bottom:0.6rem">Capture Foliage</h3>
+            <p>Snap a photo of the affected leaf in good natural light using your phone camera or select an image from your files.</p>
+          </div>
+
+          <div class="step-card">
+            <span class="step-number">02</span>
+            <h3 style="margin-bottom:0.6rem">AI Neural Scan</h3>
+            <p>Our deep vision model scans the foliage, cross-references foliar symptom patterns, and computes risk probability.</p>
+          </div>
+
+          <div class="step-card">
+            <span class="step-number">03</span>
+            <h3 style="margin-bottom:0.6rem">Apply Remedies</h3>
+            <p>Review the comprehensive diagnosis report, apply organic sprays or targeted fungicides, and save the report to your logbook.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUOTE SECTION -->
+    <section class="quote-section">
+      <div class="container">
+        <div class="quote-box">
+          <p class="quote-text">
+            &ldquo;Healthy crops are born from attentive care and early detection. AI gives every farmer the diagnostic clarity to protect their harvest before disease takes hold.&rdquo;
+          </p>
+          <div class="quote-author">&mdash; Agricultural Extension & Pathology Advisory</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION BANNER -->
+    <section style="padding:4rem 0;background:var(--bg-surface);border-top:1px solid var(--border);">
+      <div class="container" style="text-align:center;max-width:700px;">
+        <h2 style="margin-bottom:0.8rem">Ready to protect your fields today?</h2>
+        <p class="lead" style="margin-bottom:1.8rem">Diagnose crop stress early, prevent yield loss, and keep a clean health logbook.</p>
+        <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+          <a class="btn btn-primary btn-lg" href="scan.html">Scan Your Crop Now &rarr;</a>
+          <a class="btn btn-secondary btn-lg" href="dashboard.html">Explore Dashboard</a>
         </div>
       </div>
     </section>
   </main>
+
   <div id="site-footer"></div>
-  <script src="js/mock-api.js" defer></script>
-  <script src="js/app.js" defer></script>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

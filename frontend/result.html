@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scan Result — AgriSmart AI</title>
+  <title>Diagnosis Report — AgriSmart AI</title>
+  <meta name="description" content="AI plant pathology diagnostic report with organic and chemical treatment recommendations.">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
   <div id="site-header"></div>
-  <main id="main" class="container">
-    <header class="page-header">
-      <h1>Analysis Result</h1>
-      <p class="page-sub">Demonstration output for planning and review. Not a certified diagnosis.</p>
-    </header>
-    <div id="result-root"></div>
+
+  <main id="main">
+    <div id="result-root">
+      <div style="text-align:center;padding:4rem 1rem;">
+        <div class="pulse-dot" style="margin:0 auto 1.5rem;width:14px;height:14px;"></div>
+        <h3>Loading Diagnostic Report...</h3>
+        <p style="color:var(--text-muted);font-size:0.92rem;">Retrieving foliar analysis and treatment advisory.</p>
+      </div>
+    </div>
   </main>
+
   <div id="site-footer"></div>
-  <script src="js/mock-api.js" defer></script>
-  <script src="js/app.js" defer></script>
-  <script src="js/result.js" defer></script>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/result.js"></script>
+  <script src="js/khedut-mitr.js"></script>
 </body>
 </html>

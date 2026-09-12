@@ -3,40 +3,59 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     var settings = AgriAPI.getSettings();
-    document.getElementById("farmerName").value = settings.farmerName || "";
-    document.getElementById("farmName").value = settings.farmName || "";
-    document.getElementById("location").value = settings.location || "";
-    document.getElementById("language").value = settings.language || "en";
-    document.getElementById("theme").value = settings.theme || "light";
-    document.getElementById("notifications").checked = Boolean(settings.notifications);
 
-    document.getElementById("theme").addEventListener("change", function () {
-      AgriApp.applyTheme(document.getElementById("theme").value);
-    });
+    var farmerNameEl = document.getElementById("farmerName");
+    var farmNameEl = document.getElementById("farmName");
+    var locationEl = document.getElementById("location");
+    var languageEl = document.getElementById("language");
+    var themeEl = document.getElementById("theme");
+    var notificationsEl = document.getElementById("notifications");
 
-    document.getElementById("settings-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      var result = AgriAPI.saveSettings({
-        farmerName: document.getElementById("farmerName").value.trim() || "Farmer",
-        farmName: document.getElementById("farmName").value.trim(),
-        location: document.getElementById("location").value.trim(),
-        language: document.getElementById("language").value,
-        theme: document.getElementById("theme").value,
-        notifications: document.getElementById("notifications").checked
+    if (farmerNameEl) farmerNameEl.value = settings.farmerName || "";
+    if (farmNameEl) farmNameEl.value = settings.farmName || "";
+    if (locationEl) locationEl.value = settings.location || "";
+    if (languageEl) languageEl.value = settings.language || "en";
+    if (themeEl) themeEl.value = settings.theme || "light";
+    if (notificationsEl) notificationsEl.checked = Boolean(settings.notifications);
+
+    // Live theme preview on selection change
+    if (themeEl) {
+      themeEl.addEventListener("change", function () {
+        AgriApp.applyTheme(themeEl.value);
       });
-      if (!result.ok) {
-        AgriApp.toast(result.error);
-        return;
-      }
-      AgriApp.applyTheme(result.settings.theme);
-      AgriApp.toast("Settings saved on this device.");
-    });
+    }
 
-    document.getElementById("clear-history").addEventListener("click", function () {
-      var confirmed = window.confirm("Clear all saved scans from this browser?");
-      if (!confirmed) return;
-      AgriAPI.clearHistory();
-      AgriApp.toast("Scan history cleared.");
-    });
+    var form = document.getElementById("settings-form");
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var result = AgriAPI.saveSettings({
+          farmerName: (farmerNameEl ? farmerNameEl.value.trim() : "") || "Farmer",
+          farmName: farmNameEl ? farmNameEl.value.trim() : "",
+          location: locationEl ? locationEl.value.trim() : "",
+          language: languageEl ? languageEl.value : "en",
+          theme: themeEl ? themeEl.value : "light",
+          notifications: notificationsEl ? notificationsEl.checked : true
+        });
+
+        if (!result.ok) {
+          AgriApp.toast(result.error || "Could not save settings.");
+          return;
+        }
+
+        AgriApp.applyTheme(result.settings.theme);
+        AgriApp.toast("Settings saved successfully on this device.");
+      });
+    }
+
+    var clearBtn = document.getElementById("clear-history");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        var confirmed = window.confirm("Are you sure you want to delete all saved crop scans from this browser? This action cannot be undone.");
+        if (!confirmed) return;
+        AgriAPI.clearHistory();
+        AgriApp.toast("All scan records have been cleared from local storage.");
+      });
+    }
   });
 })();
