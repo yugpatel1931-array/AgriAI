@@ -545,13 +545,22 @@
         history: "My History",
         settings: "Settings"
       },
+      topbar: {
+        loginSignUp: "Login / Sign Up",
+        aiOnline: "AI Helper Online"
+      },
+      sidebar: {
+        farmer: "Farmer",
+        guestRole: "Guest Mode • Click to Sign In"
+      },
       common: {
         searchPlaceholder: "Search crop scans, diseases, treatments...",
         aiHelperOnline: "AI Helper Online",
         checkNow: "CHECK NOW",
         backToHome: "Back to Home",
         seeAdvice: "🔍 See Advice",
-        askMitr: "🤖 Ask Khedut Mitr"
+        askMitr: "🤖 Ask Khedut Mitr",
+        close: "Close"
       },
       dashboard: {
         greeting: "Good morning, Farmer! 👋",
@@ -592,15 +601,61 @@
         sustainabilityBtn: "See Improvement Tips →"
       },
       unhealthy: {
+        eyebrow: "Attention Needed",
         pageTitle: "⚠️ Crops That Need Attention",
         pageLead: "These crops showed signs of leaf disease during recent scans. Tap any plant to see what it means and what to do.",
         backBtn: "Back to Home",
         seeAdvice: "🔍 See Advice",
+        pdfSlip: "📄 PDF Slip",
         askMitr: "🤖 Ask Khedut Mitr",
         modalWhatMeans: "WHAT THIS MEANS",
         modalWhatToDo: "WHAT SHOULD YOU DO?",
         modalAskBtn: 'Ask Khedut Mitr: "What should I do?"',
+        modalPdfBtn: "📄 View & Download PDF Slip",
         viewScan: "View full technical scan details →"
+      },
+      cropRec: {
+        eyebrow: "Choose Next Crop",
+        pageTitle: "Which Crop Is Right for Your Farm? 🌱",
+        pageLead: "Pick the best crop to grow next based on your soil, water, and what you planted before.",
+        profileTitle: "Tell Us About Your Field",
+        profileLead: "Pre-filled with your farm in Anand, Gujarat. Change anything if needed.",
+        resetBtn: "Reset to Anand Farm",
+        lblLocation: "Where is your farm?",
+        lblSoilType: "What is your soil type?",
+        lblSoilPh: "Soil pH: ",
+        lblSoilPhDesc: "ⓘ pH 6.5 means your soil has the ideal balance for seeds.",
+        lblPrevCrop: "What crop did you grow before?",
+        lblWaterAvail: "How much water do you have?",
+        lblSeason: "Upcoming Season",
+        btnAnalyze: "See Best Crops For My Farm →",
+        btnCompare: "Compare Top 3 Crops",
+        loadingTitle: "Finding the best crops for your farm...",
+        loadingSub: "Looking at soil, rainfall, and what you grew before.",
+        compareTitle: "Compare Top Crops",
+        compareLead: "Side-by-side comparison of your best options"
+      },
+      irrigation: {
+        eyebrow: "Water Advice",
+        pageTitle: "Should I Water Today? 💧",
+        pageLead: "Simple advice for your crops in Anand, Gujarat. Save water and protect your plant roots.",
+        simTitle: "🔬 Test Different Soil & Weather Conditions",
+        simReset: "Reset to Farm Actuals"
+      },
+      weather: {
+        eyebrow: "Weather Advice",
+        pageTitle: "Today's Weather & Farm Advice 🌦️",
+        pageLead: "Hour-by-hour forecast and spraying advice for your farm in Anand, Gujarat."
+      },
+      sustainability: {
+        eyebrow: "Farm Health Score",
+        pageTitle: "How Sustainable Is Your Farm? 🌍",
+        pageLead: "See your overall farm score, water efficiency, and soil health with simple improvement steps."
+      },
+      history: {
+        eyebrow: "Field Log",
+        pageTitle: "Your Field History 📜",
+        pageLead: "Review past crop scans, disease findings, and care logs for your farm."
       }
     },
     gu: {
@@ -616,13 +671,22 @@
         history: "ઇતિહાસ",
         settings: "સેટિંગ્સ"
       },
+      topbar: {
+        loginSignUp: "પ્રવેશ કરો / સાઇન અપ",
+        aiOnline: "AI સહાયક ઓનલાઇન"
+      },
+      sidebar: {
+        farmer: "ખેડૂત",
+        guestRole: "ગેસ્ટ મોડ • સાઇન ઇન કરવા ક્લિક કરો"
+      },
       common: {
         searchPlaceholder: "પાક રોગ, સારવાર, માહિતી શોધો...",
         aiHelperOnline: "AI સહાયક ઓનલાઇન",
         checkNow: "તપાસો",
         backToHome: "મુખ્ય પૃષ્ઠ પર પાછા જાઓ",
         seeAdvice: "🔍 સલાહ જુઓ",
-        askMitr: "🤖 ખેડૂત મિત્રને પૂછો"
+        askMitr: "🤖 ખેડૂત મિત્રને પૂછો",
+        close: "બંધ કરો"
       },
       dashboard: {
         greeting: "સુપ્રભાત, ખેડૂત મિત્ર! 👋",
@@ -663,15 +727,61 @@
         sustainabilityBtn: "સુધારાની સલાહ જુઓ →"
       },
       unhealthy: {
-        pageTitle: "⚠️ ધ્યાન માંગતા પાક",
-        pageLead: "તાજેતરની તપાસમાં આ પાકમાં પાંદડાના રોગના લક્ષણો દેખાયા છે. શું કરવું તે જોવા માટે પાક પર ટેપ કરો.",
+        eyebrow: "ધ્યાન આપવાની જરૂર છે",
+        pageTitle: "⚠️ ધ્યાન માંગતા પાક (૩ પાક)",
+        pageLead: "તાજેતરની તપાસમાં આ પાકમાં પાંદડાના રોગના લક્ષણો દેખાયા છે. શું કરવું તે જોવા માટે કોઈપણ પાક પર ટેપ કરો.",
         backBtn: "મુખ્ય પૃષ્ઠ પર પાછા જાઓ",
         seeAdvice: "🔍 સલાહ જુઓ",
+        pdfSlip: "📄 PDF સ્લિપ",
         askMitr: "🤖 ખેડૂત મિત્રને પૂછો",
-        modalWhatMeans: "આનો અર્થ શું છે?",
+        modalWhatMeans: "આનો અર્થ શું થાય છે?",
         modalWhatToDo: "તમારે શું કરવું જોઈએ?",
-        modalAskBtn: 'ખેડૂત મિત્રને પૂછો: "હું શું કરું?"',
-        viewScan: "સંપૂર્ણ ટેકનિકલ રિપોર્ટ જુઓ →"
+        modalAskBtn: 'ખેડૂત મિત્રને પૂછો: "મારે શું કરવું જોઈએ?"',
+        modalPdfBtn: "📄 PDF સ્લિપ જુઓ અને ડાઉનલોડ કરો",
+        viewScan: "સંપૂર્ણ ટેકનિકલ સ્કેન વિગતો જુઓ →"
+      },
+      cropRec: {
+        eyebrow: "આગામી પાક પસંદ કરો",
+        pageTitle: "તમારા ખેતર માટે કયો પાક શ્રેષ્ઠ છે? 🌱",
+        pageLead: "તમારી જમીન, પાણી અને અગાઉના પાકના આધારે શ્રેષ્ઠ આગામી પાક પસંદ કરો.",
+        profileTitle: "તમારા ખેતરની વિગત આપો",
+        profileLead: "તમારા આણંદ, ગુજરાતના ખેતરની વિગત પહેલેથી ભરેલી છે. જરૂર મુજબ બદલો.",
+        resetBtn: "આણંદ ખેતર મુજબ રીસેટ કરો",
+        lblLocation: "તમારું ખેતર ક્યાં છે? (જિલ્લો)",
+        lblSoilType: "જમીનનો પ્રકાર કયો છે?",
+        lblSoilPh: "જમીન pH: ",
+        lblSoilPhDesc: "ⓘ pH 6.5 નો અર્થ છે કે તમારી જમીન બિયારણ માટે આદર્શ સંતુલિત છે.",
+        lblPrevCrop: "અગાઉ કયો પાક લીધો હતો?",
+        lblWaterAvail: "પાણીની ઉપલબ્ધતા કેટલી છે?",
+        lblSeason: "આગામી ઋતુ",
+        btnAnalyze: "મારા ખેતર માટે શ્રેષ્ઠ પાક જુઓ →",
+        btnCompare: "ટોચના ૩ પાકની સરખામણી કરો",
+        loadingTitle: "તમારા ખેતર માટે શ્રેષ્ઠ પાક શોધી રહ્યા છીએ...",
+        loadingSub: "જમીન, વરસાદ અને અગાઉના પાકનું વિશ્લેષણ થઈ રહ્યું છે.",
+        compareTitle: "ટોચના પાકની સરખામણી",
+        compareLead: "તમારા શ્રેષ્ઠ વિકલ્પોની સાથે-સાથે સરખામણી"
+      },
+      irrigation: {
+        eyebrow: "સિંચાઈ સલાહ",
+        pageTitle: "શું આજે પાણી આપવું જોઈએ? 💧",
+        pageLead: "આણંદ, ગુજરાતમાં તમારા પાક માટે સરળ સલાહ. પાણી બચાવો અને મૂળ સુરક્ષિત રાખો.",
+        simTitle: "🔬 જમીન અને હવામાનની પરિસ્થિતિ ચકાસો",
+        simReset: "ખેતરની વાસ્તવિક સ્થિતિ પર રીસેટ કરો"
+      },
+      weather: {
+        eyebrow: "હવામાન સલાહ",
+        pageTitle: "આજનું હવામાન અને ખેતર સલાહ 🌦️",
+        pageLead: "આણંદ, ગુજરાતમાં તમારા ખેતર માટે કલાકવાર આગાહી અને છંટકાવની સલાહ."
+      },
+      sustainability: {
+        eyebrow: "ખેતર સ્વાસ્થ્ય સ્કોર",
+        pageTitle: "તમારું ખેતર કેટલું ટકાઉ છે? 🌍",
+        pageLead: "સરળ સુધારણા પગલાં સાથે તમારા ખેતરનો એકંદર સ્કોર, પાણીની કાર્યક્ષમતા અને જમીનનું સ્વાસ્થ્ય જુઓ."
+      },
+      history: {
+        eyebrow: "ખેતર લોગ",
+        pageTitle: "તમારા ખેતરનો ઇતિહાસ 📜",
+        pageLead: "તમારા ખેતર માટે અગાઉની પાક તપાસ, રોગ તારણો અને સંભાળ લોગની સમીક્ષા કરો."
       }
     },
     hi: {
@@ -687,13 +797,22 @@
         history: "इतिहास",
         settings: "सेटिंग्स"
       },
+      topbar: {
+        loginSignUp: "लॉगिन / साइन अप",
+        aiOnline: "AI सहायक सक्रिय"
+      },
+      sidebar: {
+        farmer: "किसान",
+        guestRole: "गेस्ट मोड • साइन इन करने के लिए क्लिक करें"
+      },
       common: {
         searchPlaceholder: "फसल रोग, उपचार, जानकारी खोजें...",
         aiHelperOnline: "AI सहायक सक्रिय",
         checkNow: "जांचें",
         backToHome: "मुख्य पृष्ठ पर लौटें",
         seeAdvice: "🔍 सलाह देखें",
-        askMitr: "🤖 किसान मित्र से पूछें"
+        askMitr: "🤖 किसान मित्र से पूछें",
+        close: "बंद करें"
       },
       dashboard: {
         greeting: "नमस्ते, किसान भाई! 👋",
@@ -734,15 +853,61 @@
         sustainabilityBtn: "सुधार के उपाय देखें →"
       },
       unhealthy: {
-        pageTitle: "⚠️ ध्यान देने योग्य फसलें",
+        eyebrow: "ध्यान देने की आवश्यकता है",
+        pageTitle: "⚠️ ध्यान देने योग्य फसलें (३ फसलें)",
         pageLead: "हाल की जांच में इन फसलों में पत्तियों के रोग दिखे हैं। क्या करना है यह देखने के लिए किसी भी पौधे पर टैप करें।",
         backBtn: "मुख्य पृष्ठ पर लौटें",
         seeAdvice: "🔍 सलाह देखें",
+        pdfSlip: "📄 PDF पर्ची",
         askMitr: "🤖 किसान मित्र से पूछें",
         modalWhatMeans: "इसका क्या अर्थ है?",
         modalWhatToDo: "आपको क्या करना चाहिए?",
         modalAskBtn: 'किसान मित्र से पूछें: "मुझे क्या करना चाहिए?"',
+        modalPdfBtn: "📄 PDF पर्ची देखें व डाउनलोड करें",
         viewScan: "विस्तृत तकनीकी रिपोर्ट देखें →"
+      },
+      cropRec: {
+        eyebrow: "अगली फसल का चयन करें",
+        pageTitle: "आपके खेत के लिए कौन सी फसल सही है? 🌱",
+        pageLead: "अपनी मिट्टी, पानी और पिछली फसल के आधार पर अगली सर्वश्रेष्ठ फसल चुनें।",
+        profileTitle: "अपने खेत का विवरण दें",
+        profileLead: "आनंद, गुजरात के आपके खेत की जानकारी पहले से भरी है। जरूरत पड़ने पर बदलें।",
+        resetBtn: "आनंद फार्म पर रीसेट करें",
+        lblLocation: "आपका खेत कहाँ है? (ज़िला)",
+        lblSoilType: "मिट्टी का प्रकार क्या है?",
+        lblSoilPh: "मिट्टी का pH: ",
+        lblSoilPhDesc: "ⓘ pH 6.5 का अर्थ है कि आपकी मिट्टी बीजों के लिए संतुलित है।",
+        lblPrevCrop: "पहले कौन सी फसल उगाई थी?",
+        lblWaterAvail: "पानी की उपलब्धता कितनी है?",
+        lblSeason: "आगामी मौसम",
+        btnAnalyze: "मेरे खेत के लिए सर्वोत्तम फसलें देखें →",
+        btnCompare: "शीर्ष ३ फसलों की तुलना करें",
+        loadingTitle: "आपके खेत के लिए सर्वोत्तम फसलें खोजी जा रही हैं...",
+        loadingSub: "मिट्टी, वर्षा और पिछली फसल का विश्लेषण हो रहा है।",
+        compareTitle: "शीर्ष फसलों की तुलना",
+        compareLead: "आपके सर्वश्रेष्ठ विकल्पों की तुलना"
+      },
+      irrigation: {
+        eyebrow: "सिंचाई सलाह",
+        pageTitle: "क्या आज पानी देना चाहिए? 💧",
+        pageLead: "आनंद, गुजरात में आपकी फसलों के लिए सरल सलाह। पानी बचाएं और जड़ों को सुरक्षित रखें।",
+        simTitle: "🔬 विभिन्न मिट्टी और मौसम स्थितियों का परीक्षण करें",
+        simReset: "खेत की वास्तविक स्थिति पर रीसेट करें"
+      },
+      weather: {
+        eyebrow: "मौसम सलाह",
+        pageTitle: "आज का मौसम और खेत सलाह 🌦️",
+        pageLead: "आनंद, गुजरात में आपके खेत के लिए प्रति घंटे का पूर्वानुमान और छिड़काव सलाह।"
+      },
+      sustainability: {
+        eyebrow: "खेत स्वास्थ्य स्कोर",
+        pageTitle: "आपका खेत कितना टिकाऊ है? 🌍",
+        pageLead: "सरल सुधार कदमों के साथ अपने खेत का समग्र स्कोर, जल दक्षता और मिट्टी का स्वास्थ्य देखें।"
+      },
+      history: {
+        eyebrow: "खेत लॉग",
+        pageTitle: "आपके खेत का इतिहास 📜",
+        pageLead: "अपने खेत के लिए पिछली फसल जांच, रोग निष्कर्ष और देखभाल लॉग की समीक्षा करें।"
       }
     }
   };
@@ -766,13 +931,13 @@
     sidebarLinks.forEach(function (link) {
       var href = link.getAttribute("href");
       var item = NAV_ITEMS.find(function (n) { return n.href === href; });
-      if (item && t.nav[item.key]) {
+      if (item && t.nav && t.nav[item.key]) {
         var span = link.querySelector("span");
         if (span) span.textContent = t.nav[item.key];
       }
     });
 
-    // 3. Topbar elements
+    // 3. Topbar & Shell Auth elements
     var searchInput = document.getElementById("topbar-search-input");
     if (searchInput && t.common.searchPlaceholder) {
       searchInput.placeholder = t.common.searchPlaceholder;
@@ -781,14 +946,31 @@
     if (statusPill && t.common.aiHelperOnline) {
       statusPill.textContent = t.common.aiHelperOnline;
     }
+    var loginPill = document.querySelector(".topbar-login-pill span");
+    if (loginPill && t.topbar && t.topbar.loginSignUp) {
+      loginPill.textContent = t.topbar.loginSignUp;
+    }
+    var farmerRole = document.querySelector(".farmer-role");
+    if (farmerRole && !isSignedIn()) {
+      farmerRole.textContent = t.sidebar ? t.sidebar.guestRole : (l === "gu" ? "ગેસ્ટ મોડ • સાઇન ઇન કરવા ક્લિક કરો" : (l === "hi" ? "गेस्ट मोड • साइन इन करने के लिए क्लिक करें" : "Guest Mode • Click to Sign In"));
+    }
+    var farmerNameEl = document.querySelector(".farmer-name");
+    if (farmerNameEl && (farmerNameEl.textContent.trim() === "Farmer" || farmerNameEl.textContent.trim() === "ખેડૂત" || farmerNameEl.textContent.trim() === "किसान")) {
+      farmerNameEl.textContent = t.sidebar ? t.sidebar.farmer : (l === "gu" ? "ખેડૂત" : (l === "hi" ? "किसान" : "Farmer"));
+    }
 
-    // 4. Dashboard page elements
+    // 4. Safe breadcrumbs back button across all subpages
+    document.querySelectorAll("main a.btn-ghost[href='dashboard.html'] span, .breadcrumb a span, .breadcrumb-back span").forEach(function (s) {
+      if (t.common && t.common.backToHome) s.textContent = t.common.backToHome;
+    });
+
+    // 5. Dashboard page elements
     var greetingEl = document.getElementById("greeting");
     if (greetingEl && t.dashboard.greeting) {
       greetingEl.textContent = t.dashboard.greeting;
     }
     var leadEl = document.querySelector("main header p.lead");
-    if (leadEl && t.dashboard.lead) {
+    if (leadEl && t.dashboard.lead && document.getElementById("farm-health-centerpiece")) {
       leadEl.textContent = t.dashboard.lead;
     }
 
@@ -833,7 +1015,7 @@
     var kpiMon = document.querySelector("#kpi-crops div:first-child");
     if (kpiMon) kpiMon.textContent = t.dashboard.kpiMonitored;
 
-    // What should I do today section
+    // What should I do today section on dashboard
     var actionsGrid = document.querySelector(".farmer-actions-grid");
     if (actionsGrid && actionsGrid.previousElementSibling) {
       var actH2 = actionsGrid.previousElementSibling.querySelector("h2");
@@ -877,29 +1059,119 @@
       }
     }
 
-    // 5. Unhealthy plants page elements
-    var uBack = document.querySelector("main a.btn-ghost span");
-    if (uBack && t.unhealthy.backBtn) uBack.textContent = t.unhealthy.backBtn;
-    var uH1 = document.querySelector("main header h1");
-    if (uH1 && t.unhealthy.pageTitle && location.pathname.indexOf("unhealthy-plants") !== -1) {
-      uH1.textContent = t.unhealthy.pageTitle;
+    // 6. Unhealthy plants page static elements
+    if (document.getElementById("unhealthy-cards-mount")) {
+      var uEye = document.querySelector("main header .eyebrow span");
+      if (uEye && t.unhealthy.eyebrow) uEye.textContent = t.unhealthy.eyebrow;
+      var uH1 = document.querySelector("main header h1");
+      if (uH1 && t.unhealthy.pageTitle) uH1.textContent = t.unhealthy.pageTitle;
+      var uLead = document.querySelector("main header p.lead");
+      if (uLead && t.unhealthy.pageLead) uLead.textContent = t.unhealthy.pageLead;
+      var mAsk = document.querySelector("#modal-ask-mitr-btn span");
+      if (mAsk && t.unhealthy.modalAskBtn) mAsk.textContent = t.unhealthy.modalAskBtn;
+      var mPdf = document.querySelector("#modal-download-pdf-btn span");
+      if (mPdf && t.unhealthy.modalPdfBtn) mPdf.textContent = t.unhealthy.modalPdfBtn;
+      var mView = document.getElementById("modal-view-scan-btn");
+      if (mView && t.unhealthy.viewScan) mView.textContent = t.unhealthy.viewScan;
     }
-    var uLead = document.querySelector("main header p.lead");
-    if (uLead && t.unhealthy.pageLead && location.pathname.indexOf("unhealthy-plants") !== -1) {
-      uLead.textContent = t.unhealthy.pageLead;
-    }
-    document.querySelectorAll(".card-view-btn span").forEach(function (s) {
-      s.textContent = t.unhealthy.seeAdvice;
-    });
-    document.querySelectorAll(".card-ask-mitr-btn span").forEach(function (s) {
-      s.textContent = t.unhealthy.askMitr;
-    });
-    var mAsk = document.querySelector("#modal-ask-mitr-btn span");
-    if (mAsk) mAsk.textContent = t.unhealthy.modalAskBtn;
-    var mView = document.getElementById("modal-view-scan-btn");
-    if (mView) mView.textContent = t.unhealthy.viewScan;
 
-    // 6. Khedut Mitr text elements
+    // 7. Crop recommendation page static elements
+    if (document.getElementById("crop-profile-form")) {
+      var crEye = document.querySelector("main header .eyebrow span");
+      if (crEye && t.cropRec.eyebrow) crEye.textContent = t.cropRec.eyebrow;
+      var crH1 = document.querySelector("main header h1");
+      if (crH1 && t.cropRec.pageTitle) crH1.textContent = t.cropRec.pageTitle;
+      var crLead = document.querySelector("main header p.lead");
+      if (crLead && t.cropRec.pageLead) crLead.textContent = t.cropRec.pageLead;
+
+      var profHeader = document.querySelector("#crop-profile-form").previousElementSibling;
+      if (profHeader) {
+        var crProfH2 = profHeader.querySelector("h2");
+        if (crProfH2 && t.cropRec.profileTitle) crProfH2.textContent = t.cropRec.profileTitle;
+        var crProfP = profHeader.querySelector("p");
+        if (crProfP && t.cropRec.profileLead) crProfP.textContent = t.cropRec.profileLead;
+      }
+      var crReset = document.getElementById("reset-farm-btn");
+      if (crReset && t.cropRec.resetBtn) crReset.textContent = t.cropRec.resetBtn;
+
+      var lLoc = document.querySelector("label[for='inp-location']");
+      if (lLoc && t.cropRec.lblLocation) lLoc.textContent = t.cropRec.lblLocation;
+      var lSoil = document.querySelector("label[for='inp-soil-type']");
+      if (lSoil && t.cropRec.lblSoilType) lSoil.textContent = t.cropRec.lblSoilType;
+      var lPhSpan = document.querySelector("label[for='inp-soil-ph'] span");
+      if (lPhSpan && t.cropRec.lblSoilPh) lPhSpan.textContent = t.cropRec.lblSoilPh;
+      var lPhDesc = document.querySelector("label[for='inp-soil-ph'] ~ div");
+      if (lPhDesc && t.cropRec.lblSoilPhDesc) lPhDesc.textContent = t.cropRec.lblSoilPhDesc;
+      var lPrev = document.querySelector("label[for='inp-prev-crop']");
+      if (lPrev && t.cropRec.lblPrevCrop) lPrev.textContent = t.cropRec.lblPrevCrop;
+      var lWater = document.querySelector("label[for='inp-water-avail']");
+      if (lWater && t.cropRec.lblWaterAvail) lWater.textContent = t.cropRec.lblWaterAvail;
+      var lSeason = document.querySelector("label[for='inp-season']");
+      if (lSeason && t.cropRec.lblSeason) lSeason.textContent = t.cropRec.lblSeason;
+
+      var crAnalyze = document.querySelector("#analyze-crops-btn span");
+      if (crAnalyze && t.cropRec.btnAnalyze) crAnalyze.textContent = t.cropRec.btnAnalyze;
+      var crCompBtn = document.querySelector("#open-compare-btn span");
+      if (crCompBtn && t.cropRec.btnCompare) crCompBtn.textContent = t.cropRec.btnCompare;
+
+      var lH3 = document.querySelector("#crop-loading h3");
+      if (lH3 && t.cropRec.loadingTitle) lH3.textContent = t.cropRec.loadingTitle;
+      var lP = document.querySelector("#crop-loading p");
+      if (lP && t.cropRec.loadingSub) lP.textContent = t.cropRec.loadingSub;
+
+      var cmpH3 = document.getElementById("compare-modal-title");
+      if (cmpH3 && t.cropRec.compareTitle) cmpH3.textContent = t.cropRec.compareTitle;
+      var cmpP = cmpH3 ? cmpH3.nextElementSibling : null;
+      if (cmpP && t.cropRec.compareLead) cmpP.textContent = t.cropRec.compareLead;
+      var cmpDismiss = document.getElementById("dismiss-compare-modal");
+      if (cmpDismiss && t.common && t.common.close) cmpDismiss.textContent = t.common.close;
+    }
+
+    // 8. Irrigation page static elements
+    if (document.getElementById("irrigation-hero-mount")) {
+      var irEye = document.querySelector("main header .eyebrow span");
+      if (irEye && t.irrigation.eyebrow) irEye.textContent = t.irrigation.eyebrow;
+      var irH1 = document.querySelector("main header h1");
+      if (irH1 && t.irrigation.pageTitle) irH1.textContent = t.irrigation.pageTitle;
+      var irLead = document.querySelector("main header p.lead");
+      if (irLead && t.irrigation.pageLead) irLead.textContent = t.irrigation.pageLead;
+      var simH2 = document.querySelector("#reset-sim-btn") ? document.querySelector("#reset-sim-btn").previousElementSibling.querySelector("h2 span") : null;
+      if (simH2 && t.irrigation.simTitle) simH2.textContent = t.irrigation.simTitle;
+      var simReset = document.getElementById("reset-sim-btn");
+      if (simReset && t.irrigation.simReset) simReset.textContent = t.irrigation.simReset;
+    }
+
+    // 9. Weather page static elements
+    if (document.getElementById("weather-hero-mount")) {
+      var weEye = document.querySelector("main header .eyebrow span");
+      if (weEye && t.weather.eyebrow) weEye.textContent = t.weather.eyebrow;
+      var weH1 = document.querySelector("main header h1");
+      if (weH1 && t.weather.pageTitle) weH1.textContent = t.weather.pageTitle;
+      var weLead = document.querySelector("main header p.lead");
+      if (weLead && t.weather.pageLead) weLead.textContent = t.weather.pageLead;
+    }
+
+    // 10. Sustainability page static elements
+    if (document.getElementById("sustainability-hero-mount")) {
+      var suEye = document.querySelector("main header .eyebrow span");
+      if (suEye && t.sustainability.eyebrow) suEye.textContent = t.sustainability.eyebrow;
+      var suH1 = document.querySelector("main header h1");
+      if (suH1 && t.sustainability.pageTitle) suH1.textContent = t.sustainability.pageTitle;
+      var suLead = document.querySelector("main header p.lead");
+      if (suLead && t.sustainability.pageLead) suLead.textContent = t.sustainability.pageLead;
+    }
+
+    // 11. History page static elements
+    if (document.getElementById("history-cards-mount") || document.getElementById("history-table-body")) {
+      var hiEye = document.querySelector("main header .eyebrow span");
+      if (hiEye && t.history.eyebrow) hiEye.textContent = t.history.eyebrow;
+      var hiH1 = document.querySelector("main header h1");
+      if (hiH1 && t.history.pageTitle) hiH1.textContent = t.history.pageTitle;
+      var hiLead = document.querySelector("main header p.lead");
+      if (hiLead && t.history.pageLead) hiLead.textContent = t.history.pageLead;
+    }
+
+    // 12. Khedut Mitr text elements
     var lSub = document.querySelector(".khedut-mitr-launcher-sub");
     if (lSub) {
       lSub.textContent = l === "gu" ? "તમારો ખેડૂત મિત્ર" : (l === "hi" ? "आपका किसान मित्र" : "ખેડૂત મિત્ર • Farm Helper");
@@ -913,7 +1185,12 @@
       mInput.placeholder = l === "gu" ? "લખો અથવા બોલીને ખેડૂત મિત્રને પૂછો..." : (l === "hi" ? "टाइप करें या बोलकर किसान मित्र से पूछें..." : "Type or speak to Khedut Mitr...");
     }
 
-    if (showToast) {
+    // 13. Dispatch event for page-specific dynamic re-renders
+    try {
+      window.dispatchEvent(new CustomEvent("agri:lang", { detail: { lang: l } }));
+    } catch (err) {}
+    
+        if (showToast) {
       if (l === "gu") {
         toast("ભાષા સફળતાપૂર્વક બદલાઈ: ગુજરાતી");
       } else if (l === "hi") {
