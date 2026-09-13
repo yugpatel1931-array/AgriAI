@@ -76,14 +76,18 @@
       var thumb = item.imageDataUrl
         ? '<img src="' + item.imageDataUrl + '" alt="" style="width:42px;height:42px;object-fit:cover;border-radius:var(--radius-sm);flex-shrink:0">'
         : '<div class="crop-avatar">' + emoji + '</div>';
+      var reportId = (AgriApp.formatReportId ? AgriApp.formatReportId(item.id, item.crop, item.scannedAt) : item.id) || "AGRI-GJ-2026-84921";
 
       return (
-        '<a class="scan-row" href="result.html?id=' + encodeURIComponent(item.id) + '">' +
+        '<a class="scan-row" href="result.html?id=' + encodeURIComponent(reportId) + '">' +
         '  <div style="display:flex;align-items:center;gap:0.85rem;">' +
         '    ' + thumb +
         '    <div>' +
-        '      <strong style="color:var(--text-main);font-size:0.95rem;">' + AgriApp.escapeHtml(item.crop) + '</strong>' +
-        '      <div style="font-size:0.78rem;color:var(--text-subtle);">' + AgriApp.formatDate(item.scannedAt) + '</div>' +
+        '      <div style="display:flex;align-items:center;gap:0.45rem;">' +
+        '        <strong style="color:var(--text-main);font-size:0.95rem;">' + AgriApp.escapeHtml(item.crop) + '</strong>' +
+        '        <span style="font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.72rem;background:var(--bg-sand);color:var(--forest-dark);font-weight:700;padding:1px 5px;border-radius:4px;border:1px solid var(--border);">' + AgriApp.escapeHtml(reportId) + '</span>' +
+        '      </div>' +
+        '      <div style="font-size:0.78rem;color:var(--text-subtle);margin-top:0.15rem;">' + AgriApp.formatDate(item.scannedAt) + '</div>' +
         '    </div>' +
         '  </div>' +
         '  <div><span style="font-weight:600;font-size:0.92rem;color:var(--text-main);">' + AgriApp.escapeHtml(item.disease) + '</span></div>' +
@@ -115,7 +119,8 @@
 
       var currentHistory = AgriAPI.getScanHistory();
       var filtered = currentHistory.filter(function (item) {
-        var hay = (item.crop + " " + item.disease).toLowerCase();
+        var repId = (AgriApp.formatReportId ? AgriApp.formatReportId(item.id, item.crop, item.scannedAt) : item.id) || "";
+        var hay = (item.crop + " " + item.disease + " " + item.id + " " + repId).toLowerCase();
         return (!q || hay.indexOf(q) !== -1) &&
           (!crop || item.crop === crop) &&
           (!risk || item.risk.toLowerCase() === risk.toLowerCase()) &&

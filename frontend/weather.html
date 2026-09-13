@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Today's Weather Advice — AgriSmart AI</title>
+  <meta name="description" content="What today's weather means for your crops in Anand, Gujarat: rain forecast, safe spray windows, and leaf disease alerts.">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main id="main">
+    <!-- BREADCRUMB / BACK LINK -->
+    <div style="margin-bottom:1.2rem;">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm" style="padding-left:0;font-weight:700;display:inline-flex;align-items:center;gap:0.4rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+
+    <header style="margin-bottom:1.8rem;">
+      <div class="eyebrow" style="background:rgba(82,183,136,0.18);color:var(--forest-dark);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+        <span>Weather Advice</span>
+      </div>
+      <h1 style="font-size:2.2rem;margin-bottom:0.3rem;">Today's Weather Advice 🌦️</h1>
+      <p class="lead" style="font-size:1.05rem;color:var(--text-muted);margin-bottom:0;">What today's weather means for your farm in Anand, Gujarat.</p>
+    </header>
+
+    <!-- CURRENT WEATHER & WHAT IT MEANS (HERO CARD) -->
+    <section class="card agro-weather-hero" id="weather-hero-mount" style="margin-bottom:2rem;">
+      <!-- Populated dynamically by weather.js -->
+    </section>
+
+    <!-- 5-DAY WEATHER FORECAST FOR FARMERS -->
+    <section class="card" style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;">
+        <div>
+          <h2 style="font-size:1.25rem;margin:0;color:var(--text-main);">5-Day Weather & Spray Timing</h2>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:0.2rem 0 0;">Anand, Gujarat &bull; Weather forecast for crop care</p>
+        </div>
+        <span class="badge badge-secondary" style="font-size:0.75rem;">Simulated weather data</span>
+      </div>
+
+      <div class="forecast-5day-grid" id="forecast-5day-mount">
+        <!-- Populated dynamically by weather.js -->
+      </div>
+    </section>
+
+    <!-- ACTIONABLE FARM ADVISORIES -->
+    <section style="margin-bottom:2rem;">
+      <div style="margin-bottom:1rem;">
+        <h3 style="font-size:1.3rem;margin:0 0 0.2rem;color:var(--text-main);">What Should You Do Today?</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Clear actions based on today's rain and humidity.</p>
+      </div>
+
+      <div class="advisories-stack" id="advisories-mount">
+        <!-- Populated dynamically by weather.js -->
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/khedut-mitr.js"></script>
+</body>
+</html>

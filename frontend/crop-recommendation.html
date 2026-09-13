@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose the Right Crop for Your Farm — AgriSmart AI</title>
+  <meta name="description" content="Find the best crop to grow on your farm based on your soil type, water availability, and what you grew before.">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main id="main">
+    <!-- BREADCRUMB / BACK LINK -->
+    <div style="margin-bottom:1.2rem;">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm" style="padding-left:0;font-weight:700;display:inline-flex;align-items:center;gap:0.4rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+
+    <header style="margin-bottom:1.8rem;">
+      <div class="eyebrow" style="background:var(--sage);color:var(--forest-dark);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 20h10"/><path d="M10 20c0-4.4 3.6-8 8-8v-1c-5 0-9 4-9 9"/><path d="M14 20c0-6.6-5.4-12-12-12v1c5.5 0 10 4.5 10 10"/><circle cx="12" cy="5" r="2"/></svg>
+        <span>Choose Next Crop</span>
+      </div>
+      <h1 style="font-size:2.2rem;margin-bottom:0.3rem;">Which Crop Is Right for Your Farm? 🌱</h1>
+      <p class="lead" style="font-size:1.05rem;color:var(--text-muted);margin-bottom:0;">Pick the best crop to grow next based on your soil, water, and what you planted before.</p>
+    </header>
+
+    <!-- FARM PROFILE INPUT CARD -->
+    <section class="card" style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+        <div>
+          <h2 style="font-size:1.25rem;margin:0;color:var(--text-main);">Tell Us About Your Field</h2>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:0.2rem 0 0;">Pre-filled with your farm in Anand, Gujarat. Change anything if needed.</p>
+        </div>
+        <button id="reset-farm-btn" class="btn btn-ghost btn-sm" type="button">Reset to Anand Farm</button>
+      </div>
+
+      <form id="crop-profile-form">
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label" for="inp-location">Where is your farm?</label>
+            <input type="text" id="inp-location" class="form-input" value="Anand, Gujarat">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-soil-type">What is your soil type?</label>
+            <select id="inp-soil-type" class="form-input">
+              <option value="Loamy" selected>Loamy (Loose & fertile)</option>
+              <option value="Clay Loam">Clay Loam</option>
+              <option value="Sandy Loam">Sandy Loam</option>
+              <option value="Black Cotton">Black Cotton Soil</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-soil-ph">
+              <span>Soil pH: </span><strong style="color:var(--forest-mid);">6.5 (Balanced)</strong>
+            </label>
+            <input type="number" step="0.1" min="4.0" max="9.5" id="inp-soil-ph" class="form-input" value="6.5">
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;">
+              ⓘ pH 6.5 means your soil has the ideal balance for seeds.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid-3" style="margin-top:1rem;">
+          <div class="form-group">
+            <label class="form-label" for="inp-prev-crop">What crop did you grow before?</label>
+            <select id="inp-prev-crop" class="form-input">
+              <option value="Wheat" selected>Wheat (Uses up soil nitrogen)</option>
+              <option value="Rice">Rice / Paddy</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Tomato">Tomato</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-water-avail">How much water do you have?</label>
+            <select id="inp-water-avail" class="form-input">
+              <option value="Moderate (Canal & Tubewell)" selected>Moderate (Canal & Tubewell)</option>
+              <option value="High (Perennial Canal)">Plenty of water</option>
+              <option value="Low (Rainfed / Deep Borewell)">Limited water</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inp-season">Upcoming Season</label>
+            <select id="inp-season" class="form-input">
+              <option value="Kharif / Monsoon" selected>Kharif / Monsoon (Current)</option>
+              <option value="Rabi / Winter">Rabi / Winter</option>
+              <option value="Zaid / Summer">Zaid / Summer</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- HIDDEN FIELDS FOR NPK PRESERVED -->
+        <input type="hidden" id="inp-n" value="45">
+        <input type="hidden" id="inp-p" value="28">
+        <input type="hidden" id="inp-k" value="180">
+        <input type="hidden" id="inp-temp" value="30">
+
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+          <button type="submit" class="btn btn-primary btn-lg" id="analyze-crops-btn" style="font-weight:800;">
+            <span>See Best Crops For My Farm &rarr;</span>
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="open-compare-btn">
+            <span>Compare Top 3 Crops</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- LOADING STATE -->
+    <div id="crop-loading" class="card hidden" style="text-align:center;padding:3rem 1rem;margin-bottom:2rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.8rem;animation:spin 1.5s linear infinite;display:inline-block;">🌱</div>
+      <h3 style="font-size:1.2rem;margin-bottom:0.4rem;">Finding the best crops for your farm...</h3>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Looking at soil, rainfall, and what you grew before.</p>
+    </div>
+
+    <!-- MAIN RESULTS CONTAINER -->
+    <div id="crop-results-root">
+      <!-- Populated dynamically by crop-recommendation.js -->
+    </div>
+
+    <!-- COMPARISON MODAL -->
+    <div id="compare-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="compare-modal-title">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="font-size:1.5rem;">⚖️</span>
+            <div>
+              <h3 id="compare-modal-title" style="margin:0;font-size:1.25rem;">Compare Top Crops</h3>
+              <p style="margin:0;font-size:0.82rem;color:var(--text-muted);">Side-by-side comparison of your best options</p>
+            </div>
+          </div>
+          <button id="close-compare-modal" class="btn-close" aria-label="Close modal">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding:1.5rem;overflow-x:auto;" id="compare-table-root">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div class="modal-footer" style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;">
+          <button id="dismiss-compare-modal" class="btn btn-secondary btn-sm">Close</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/crop-recommendation.js"></script>
+  <script src="js/khedut-mitr.js"></script>
+</body>
+</html>

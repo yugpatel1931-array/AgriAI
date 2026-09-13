@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Farm Dashboard — AgriSmart AI</title>
-  <meta name="description" content="Living farm health dashboard tracking overall field vigor, recent diagnostic scans, crop disease risk, and weekly inspection activity.">
+  <meta name="description" content="Your daily living farm helper: check crop health, see water advice, view weather warnings, and ask Khedut Mitr.">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -13,32 +13,34 @@
   <div id="site-header"></div>
 
   <main id="main">
-    <header style="margin-bottom:2rem;">
-      <div class="eyebrow">
+    <!-- TOP GREETING & STATUS -->
+    <header style="margin-bottom:1.8rem;">
+      <div class="eyebrow" style="background:var(--sage);color:var(--forest-dark);">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <span>Living Farm Intelligence</span>
+        <span>Farmer Command Center</span>
       </div>
-      <h1 id="greeting" style="font-size:2.2rem;margin-bottom:0.3rem;">Good morning, Farmer! 👋</h1>
-      <p class="lead" style="font-size:1.05rem;margin-bottom:0;">Healthy fields, happy harvest. Here is your active farm health overview.</p>
+      <h1 id="greeting" style="font-size:2.2rem;margin-bottom:0.2rem;">Good morning, Farmer! 👋</h1>
+      <p class="lead" style="font-size:1.05rem;color:var(--text-muted);margin-bottom:0;">Here's what needs your attention today on your farm in Anand, Gujarat.</p>
     </header>
+
 
     <!-- DASHBOARD HERO CENTERPIECE & CTA CARD -->
     <section class="dashboard-hero">
       <div class="farm-health-card" id="farm-health-centerpiece">
         <div>
-          <span class="badge badge-success" id="farm-health-badge" style="margin-bottom:0.6rem;">Optimal Crop Vigor</span>
-          <h2 style="font-size:1.6rem;margin-bottom:0.4rem;">Overall Farm Health</h2>
+          <span class="badge badge-success" id="farm-health-badge" style="margin-bottom:0.6rem;">Crop Health Overview</span>
+          <h2 style="font-size:1.5rem;margin-bottom:0.4rem;">How Is Your Farm Doing?</h2>
           <p id="farm-health-summary" style="font-size:0.92rem;color:var(--text-muted);max-width:38ch;margin-bottom:1.2rem;">
-            Calculating current farm health score from your recorded crop scans...
+            Checking recorded crop scans on your farm...
           </p>
           <div style="display:flex;gap:1.8rem;flex-wrap:wrap;">
             <div>
-              <span style="font-size:0.78rem;color:var(--text-subtle);display:block;font-weight:600;text-transform:uppercase;">Healthy Share</span>
-              <strong id="healthy-share-text" style="font-size:1.2rem;color:var(--forest-mid);">--</strong>
+              <span style="font-size:0.78rem;color:var(--text-subtle);display:block;font-weight:600;text-transform:uppercase;">Healthy Crops</span>
+              <strong id="healthy-share-text" style="font-size:1.2rem;color:var(--forest-mid);">3 crops</strong>
             </div>
             <div>
-              <span style="font-size:0.78rem;color:var(--text-subtle);display:block;font-weight:600;text-transform:uppercase;">Attention Needed</span>
-              <strong id="attention-share-text" style="font-size:1.2rem;color:var(--warning);">--</strong>
+              <span style="font-size:0.78rem;color:var(--text-subtle);display:block;font-weight:600;text-transform:uppercase;">Need Attention</span>
+              <a href="unhealthy-plants.html" id="attention-share-text" style="font-size:1.2rem;color:var(--warning);font-weight:800;text-decoration:underline;">3 crops &rarr;</a>
             </div>
           </div>
         </div>
@@ -50,7 +52,7 @@
           </svg>
           <div class="health-gauge-center">
             <div class="score" id="health-gauge-score">--</div>
-            <div class="label">VIGOR INDEX</div>
+            <div class="label">FARM HEALTH</div>
           </div>
         </div>
       </div>
@@ -58,91 +60,107 @@
       <!-- SCAN YOUR CROP CTA CARD -->
       <div class="card card-forest" style="display:flex;flex-direction:column;justify-content:space-between;padding:2rem;border-radius:var(--radius-lg);">
         <div>
-          <span class="eyebrow" style="color:var(--fresh);margin-bottom:0.5rem;">Field Action</span>
-          <h3 style="font-size:1.45rem;margin-bottom:0.5rem;">Scan Your Crop</h3>
-          <p style="font-size:0.92rem;color:rgba(255,255,255,0.85);line-height:1.5;">
-            Notice unusual spots, curling, or leaf yellowing? Take a photo for instant AI foliar diagnosis and treatment guidance.
+          <span class="eyebrow" style="color:var(--fresh);margin-bottom:0.5rem;">Quick Field Action</span>
+          <h3 style="font-size:1.45rem;margin-bottom:0.5rem;">Check Your Crop</h3>
+          <p style="font-size:0.92rem;color:rgba(255,255,255,0.88);line-height:1.5;">
+            Notice spots, curling, or leaf yellowing? Take a photo with your camera for simple advice on what to do.
           </p>
         </div>
-        <div style="margin-top:1.5rem;">
-          <a class="btn btn-secondary" href="scan.html" style="background:#FFFFFF;color:var(--forest-dark)!important;font-weight:700;border:none;">
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+          <a class="btn btn-secondary btn-lg" href="scan.html" style="background:#FFFFFF;color:var(--forest-dark)!important;font-weight:800;border:none;box-shadow:var(--shadow-sm);">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <span>Scan Crop Now &rarr;</span>
+            <span>Check Crop Now &rarr;</span>
+          </a>
+          <a class="btn btn-ghost btn-sm" href="result.html" style="color:#FFFFFF!important;border:1.5px solid rgba(255,255,255,0.45);font-weight:700;display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;border-radius:var(--radius-full);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>📄 Latest Crop PDF Slip</span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 4 KPI SUMMARY CARDS -->
+    <!-- 4 KPI SUMMARY CARDS (CONTRACT PRESERVED) -->
     <section id="kpis" class="kpi-grid">
       <!-- Populated dynamically by dashboard.js -->
     </section>
 
-    <!-- LIVE FARM AGRO-METEOROLOGY & SPORE DISPERSION RADAR -->
-    <section class="card agro-weather-card" style="margin-bottom:2rem;">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.2rem;">
-        <div style="display:flex;align-items:center;gap:0.75rem;">
-          <div style="width:42px;height:42px;border-radius:var(--radius-sm);background:rgba(82,183,136,0.18);display:grid;place-items:center;font-size:1.4rem;">⛅</div>
-          <div>
-            <h3 style="font-size:1.2rem;margin:0;color:var(--text-main);">Farm Microclimate Telemetry & Spore Risk</h3>
-            <span style="font-size:0.8rem;color:var(--text-muted);">Live IoT telemetry stream &bull; Station Anand-Gujarat (22.56° N, 72.92° E)</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:0.6rem;align-items:center;">
-          <span class="pulse-dot"></span>
-          <span style="font-size:0.82rem;color:var(--fresh);font-weight:700;">LIVE TELEMETRY</span>
-        </div>
+    <!-- FARMER COMMAND CENTER: 4 CLEAR ACTION SECTIONS -->
+    <section style="margin-bottom:2.5rem;">
+      <div style="margin-bottom:1rem;">
+        <h2 style="font-size:1.35rem;margin:0 0 0.2rem;color:var(--text-main);">What Should I Do Today?</h2>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Clear advice for your farm in Anand, Gujarat.</p>
       </div>
 
-      <div class="weather-badges-grid">
-        <div class="weather-badge-pill">
-          <span style="font-size:1.3rem;">🌡️</span>
-          <div>
-            <strong>26.4°C</strong>
-            <small>Ambient Surface Temp</small>
+      <div class="farmer-actions-grid">
+        <!-- 1. Water Advice -->
+        <div class="card farmer-action-card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
+            <span style="font-size:1.6rem;">💧</span>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--text-subtle);text-transform:uppercase;">WATER ADVICE</div>
+              <strong style="font-size:1.15rem;color:var(--warning);">Wait Before Watering</strong>
+            </div>
           </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin:0 0 1.2rem;flex:1;">
+            Rain is expected today (78% chance) and your soil already has plenty of moisture. Waiting saves water and protects roots.
+          </p>
+          <a href="irrigation.html" class="btn btn-secondary btn-sm" style="font-weight:700;">See Water Advice &rarr;</a>
         </div>
-        <div class="weather-badge-pill">
-          <span style="font-size:1.3rem;">💧</span>
-          <div>
-            <strong>82% RH</strong>
-            <small>Fungal Spore Risk: Elevated</small>
-          </div>
-        </div>
-        <div class="weather-badge-pill">
-          <span style="font-size:1.3rem;">💨</span>
-          <div>
-            <strong>5.8 km/h</strong>
-            <small>Wind (Gentle Breeze &bull; Minimal Drift)</small>
-          </div>
-        </div>
-        <div class="weather-badge-pill">
-          <span style="font-size:1.3rem;">☔</span>
-          <div>
-            <strong>12% Rain Risk</strong>
-            <small>Safe 8-Hour Rainfast Window</small>
-          </div>
-        </div>
-      </div>
 
-      <div class="spray-window-banner">
-        <div style="display:flex;align-items:center;gap:0.75rem;">
-          <span style="font-size:1.5rem;">🎯</span>
-          <div>
-            <strong class="spray-window-title">RECOMMENDED SPRAY TIMING: Tomorrow Morning 06:30 AM &ndash; 09:00 AM</strong>
-            <span class="spray-window-desc">Thermal air currents are minimal and foliar stomata are open for peak bio-absorption. Avoid spraying during peak afternoon heat.</span>
+        <!-- 2. Weather & Spray Timing -->
+        <div class="card farmer-action-card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
+            <span style="font-size:1.6rem;">🌦️</span>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--text-subtle);text-transform:uppercase;">TODAY'S WEATHER</div>
+              <strong style="font-size:1.15rem;color:var(--text-main);">30°C &bull; Rain Likely</strong>
+            </div>
           </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin:0 0 1.2rem;flex:1;">
+            Hold off on spraying today so rain doesn't wash it away. Best time to spray is tomorrow morning (06:30 – 09:00 AM).
+          </p>
+          <a href="weather.html" class="btn btn-secondary btn-sm" style="font-weight:700;">See Weather Advice &rarr;</a>
+        </div>
+
+        <!-- 3. Next Crop Recommendation -->
+        <div class="card farmer-action-card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
+            <span style="font-size:1.6rem;">🌱</span>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--text-subtle);text-transform:uppercase;">NEXT CROP ADVICE</div>
+              <strong style="font-size:1.15rem;color:var(--leaf);">Groundnut (94% Match)</strong>
+            </div>
+          </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin:0 0 1.2rem;flex:1;">
+            Groundnut naturally restores nitrogen to your soil after wheat harvest and thrives in your loose loamy soil.
+          </p>
+          <a href="crop-recommendation.html" class="btn btn-secondary btn-sm" style="font-weight:700;">See Best Crops &rarr;</a>
+        </div>
+
+        <!-- 4. Farm Sustainability Score -->
+        <div class="card farmer-action-card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.75rem;">
+            <span style="font-size:1.6rem;">♻️</span>
+            <div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--text-subtle);text-transform:uppercase;">FARM SCORE</div>
+              <strong style="font-size:1.15rem;color:var(--forest-dark);">82 / 100 (Doing Well)</strong>
+            </div>
+          </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.5;margin:0 0 1.2rem;flex:1;">
+            Your farm is using drip irrigation well. One thing you can improve today: try bio-sprays instead of chemical sprays.
+          </p>
+          <a href="sustainability.html" class="btn btn-secondary btn-sm" style="font-weight:700;">Improve My Farm &rarr;</a>
         </div>
       </div>
     </section>
 
-    <!-- RECENT SCANS & WEEKLY ACTIVITY -->
+    <!-- RECENT SCANS & WEEKLY INSPECTION (CONTRACT PRESERVED) -->
     <section style="display:grid;grid-template-columns:1.5fr 1fr;gap:1.5rem;align-items:start;margin-bottom:2.5rem;">
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
           <div>
-            <h3 style="font-size:1.2rem;margin-bottom:0.2rem;">Recent Diagnostic Scans</h3>
-            <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Recent crop leaf assessments stored on this device</p>
+            <h3 style="font-size:1.2rem;margin-bottom:0.2rem;">Recent Crop Checks</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Leaf checks recorded on this device</p>
           </div>
           <a href="history.html" class="btn btn-ghost btn-sm">View All &rarr;</a>
         </div>
@@ -154,14 +172,14 @@
       <div class="card">
         <div style="margin-bottom:1rem;">
           <h3 style="font-size:1.2rem;margin-bottom:0.2rem;">Weekly Inspection Trend</h3>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Diagnostic activity across the past 7 days</p>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Number of leaf checks across the past 7 days</p>
         </div>
         <div class="chart" id="overview-chart">
           <!-- Populated by dashboard.js -->
         </div>
         <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;">
           <div style="width:10px;height:10px;border-radius:50%;background:var(--leaf);"></div>
-          <span style="font-size:0.82rem;color:var(--text-muted);">Inspection frequency is optimal for early foliar intervention.</span>
+          <span style="font-size:0.82rem;color:var(--text-muted);">Regular leaf checking helps catch disease before it spreads.</span>
         </div>
       </div>
     </section>

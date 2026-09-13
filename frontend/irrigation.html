@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Water Advice: Should I Water Today? — AgriSmart AI</title>
+  <meta name="description" content="Simple, clear water advice for farmers: know whether to water your crops today based on soil moisture and rain forecast.">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main id="main">
+    <!-- BREADCRUMB / BACK LINK -->
+    <div style="margin-bottom:1.2rem;">
+      <a href="dashboard.html" class="btn btn-ghost btn-sm" style="padding-left:0;font-weight:700;display:inline-flex;align-items:center;gap:0.4rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Back to Home</span>
+      </a>
+    </div>
+
+    <header style="margin-bottom:1.8rem;">
+      <div class="eyebrow" style="background:var(--info-soft);color:var(--info);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span>Water Advice</span>
+      </div>
+      <h1 style="font-size:2.2rem;margin-bottom:0.3rem;">Should I Water Today? 💧</h1>
+      <p class="lead" style="font-size:1.05rem;color:var(--text-muted);margin-bottom:0;">Simple advice for your crops in Anand, Gujarat. Save water and protect your plant roots.</p>
+    </header>
+
+    <!-- DECISION HERO CARD -->
+    <section class="card irrigation-hero-card" id="irrigation-hero-mount" style="margin-bottom:2rem;">
+      <!-- Populated dynamically by irrigation.js -->
+    </section>
+
+    <!-- INTERACTIVE SIMULATION SLIDER (TEST SCENARIOS) -->
+    <section class="card" style="margin-bottom:2rem;background:var(--bg-sand);border:1.5px solid var(--border);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <h2 style="font-size:1.15rem;margin:0;color:var(--forest-dark);display:flex;align-items:center;gap:0.5rem;">
+            <span>🔬 Test Different Soil & Weather Conditions</span>
+          </h2>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0.2rem 0 0;">Move the sliders to see how the advice changes if the soil is dry or rain is not expected.</p>
+        </div>
+        <button id="reset-sim-btn" class="btn btn-ghost btn-sm" type="button">Reset to Farm Actuals</button>
+      </div>
+
+      <div class="form-grid-3" style="align-items:flex-end;">
+        <div class="form-group">
+          <label class="form-label" for="sim-moisture">
+            <span>Soil Moisture: </span><strong id="sim-moisture-val" style="color:var(--forest-mid);">31%</strong>
+          </label>
+          <input type="range" id="sim-moisture" min="10" max="60" value="31" step="1" style="width:100%;">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-subtle);margin-top:0.2rem;">
+            <span>10% (Dry/Wilting)</span>
+            <span>30% (Optimal)</span>
+            <span>60% (Saturated)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="sim-rain-prob">
+            <span>Chance of Rain: </span><strong id="sim-rain-val" style="color:var(--forest-mid);">78%</strong>
+          </label>
+          <input type="range" id="sim-rain-prob" min="0" max="100" value="78" step="5" style="width:100%;">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-subtle);margin-top:0.2rem;">
+            <span>0% (Sunny Sky)</span>
+            <span>50% (Doubtful)</span>
+            <span>100% (Certain Rain)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="sim-crop-stage">Crop Growth Stage</label>
+          <select id="sim-crop-stage" class="form-input">
+            <option value="Flowering" selected>Flowering (Sensitive to excess water)</option>
+            <option value="Vegetative">Growing leaves</option>
+            <option value="Fruiting">Fruiting / Harvest</option>
+            <option value="Seedling">Young Seedling</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- WATER SAVINGS IMPACT -->
+    <section class="card" style="margin-bottom:2rem;background:var(--bg-surface-elevated);border-left:4px solid var(--forest-mid);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;">
+        <div>
+          <span class="badge badge-success" style="margin-bottom:0.4rem;">What You Save</span>
+          <h3 style="font-size:1.3rem;margin:0 0 0.3rem;color:var(--text-main);">Savings by Waiting Before Watering</h3>
+          <p style="font-size:0.88rem;color:var(--text-muted);margin:0;max-width:45ch;">
+            Waiting for forecasted rain avoids pumping unnecessary water and keeps plant roots well-aerated.
+          </p>
+        </div>
+        <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-subtle);text-transform:uppercase;font-weight:700;">Water Saved</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--forest-dark);">14,000 L</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">Per acre this watering</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-subtle);text-transform:uppercase;font-weight:700;">Electricity Saved</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--leaf);">3.5 kWh</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">Motor power saved</div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-subtle);text-transform:uppercase;font-weight:700;">Money Saved</div>
+            <div style="font-size:1.6rem;font-weight:800;color:var(--warning);">₹380</div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">In power and labor</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL DETAILS ACCORDION -->
+    <details class="card" style="margin-bottom:2rem;background:var(--bg-sand);border:1px solid var(--border);padding:1rem 1.25rem;">
+      <summary style="cursor:pointer;font-weight:700;font-size:0.92rem;color:var(--forest-dark);user-select:none;">
+        ⚙️ View technical calculations & decision steps
+      </summary>
+      <div style="margin-top:1rem;" class="pipeline-steps-grid" id="pipeline-steps-mount">
+        <!-- Rendered dynamically -->
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:1rem;line-height:1.5;">
+        Calibrated to ICAR and FAO-56 crop coefficient guidelines. Demo simulation scenario.
+      </p>
+    </details>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/mock-api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/irrigation.js"></script>
+  <script src="js/khedut-mitr.js"></script>
+</body>
+</html>
