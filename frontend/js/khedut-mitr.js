@@ -74,7 +74,18 @@
   // Markdown to structured HTML parser for advisor responses with interactive prompt chips
   function formatAdvisorMessage(rawText) {
     if (!rawText) return "";
-    var lines = rawText.split("\n");
+
+    // Gemini may return valid Markdown without newline characters. Normalize
+    // common headings, numbered steps, bullets, and paragraphs before parsing
+    // so the response keeps the same readable Khedut Mitr presentation.
+    var normalized = String(rawText)
+      .replace(/\r\n?/g, "\n")
+      .replace(/\s+(?=(?:\*\*)?\d+\.\s+)/g, "\n")
+      .replace(/\s+(?=\*\*(?:What|Why|How|Next step|Next steps|Today|Your|Important|Tip|આજે|શા માટે|કેવી રીતે|આગળ|તમારો|મહત્વપૂર્ણ|आज|क्यों|कैसे|आगे|आपका|महत्वपूर्ण)\b)/g, "\n\n")
+      .replace(/\s+(?=[•]\s+)/g, "\n")
+      .replace(/\s+(?=\*\s+(?!\*))/g, "\n");
+
+    var lines = normalized.split("\n");
     var html = [];
     var pendingChips = [];
 
@@ -1267,7 +1278,7 @@
 
     activeAddLoadingStage = addLoadingStage;
 
-    function handleSend(userQuestion, customContext) {
+    async function handleSend(userQuestion, customContext) {
       var text = (userQuestion || input.value || "").trim();
       if (!text) return;
 
@@ -1277,17 +1288,27 @@
       var loader = addLoadingStage();
       sendBtn.disabled = true;
 
-      var delayMs = 600 + Math.floor(Math.random() * 250);
-      setTimeout(function () {
-        if (loader && loader.parentNode) {
-          loader.parentNode.removeChild(loader);
+      try {
+        // Real Gemini path. The API key stays on the Python backend.
+        if (global.AgriGemini && typeof global.AgriGemini.ask === "function") {
+          var reply = await global.AgriGemini.ask(text, customContext || { crop: cropName });
+          if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+          addMessage("bot", reply, true);
+        } else {
+          throw new Error("Gemini adapter unavailable");
         }
-        var reply = getBotResponse(text, customContext || { crop: cropName });
-        addMessage("bot", reply, true);
+      } catch (error) {
+        // Graceful demo fallback: the existing grounded template assistant
+        // still works if the local API is not running or Gemini is unavailable.
+        if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+        var fallback = getBotResponse(text, customContext || { crop: cropName });
+        addMessage("bot", fallback + "\n\n*Gemini is currently unavailable, so Khedut Mitr used its offline guidance.*", true);
+        if (global.console) console.warn("Gemini Khedut Mitr unavailable:", error);
+      } finally {
         sendBtn.disabled = false;
         input.focus();
         scrollToBottom();
-      }, delayMs);
+      }
     }
 
     sendBtn.addEventListener("click", function () {
@@ -1383,13 +1404,22 @@
     if (activeAddMessage && activeAddLoadingStage) {
       activeAddMessage("user", questionText, false);
       var loader = activeAddLoadingStage();
-      setTimeout(function () {
-        if (loader && loader.parentNode) {
-          loader.parentNode.removeChild(loader);
+      (async function () {
+        try {
+          var reply;
+          if (global.AgriGemini && typeof global.AgriGemini.ask === "function") {
+            reply = await global.AgriGemini.ask(questionText, context);
+          } else {
+            throw new Error("Gemini adapter unavailable");
+          }
+          if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+          activeAddMessage("bot", reply, true);
+        } catch (error) {
+          if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+          activeAddMessage("bot", getBotResponse(questionText, context) + "\n\n*Gemini is currently unavailable, so Khedut Mitr used its offline guidance.*", true);
+          if (global.console) console.warn("Gemini Khedut Mitr unavailable:", error);
         }
-        var reply = getBotResponse(questionText, context);
-        activeAddMessage("bot", reply, true);
-      }, 650);
+      })();
     }
   }
 
@@ -1406,6 +1436,7 @@
     askPreloaded: askPreloaded,
     resetToNewChat: function () {
       if (activeResetToNewChat) activeResetToNewChat(false);
+      if (global.AgriGemini && typeof global.AgriGemini.reset === "function") global.AgriGemini.reset();
     }
   };
 })(window);
