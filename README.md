@@ -159,9 +159,7 @@ check (`python -m src.irrigation --validate`) as its validation method.
 
 ## Demo video
 
-*Add the unlisted demo-video link here before submission (Section 7.4 —
-3–5 minutes, must show the core task running on a new image plus any
-bonus modules).*
+https://drive.google.com/file/d/1Ka1JBE2OU4tV4tLJLo34dOX1FH7pZ3ya/view?usp=drivesdk
 
 ## Originality declaration
 
