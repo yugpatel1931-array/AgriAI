@@ -1,0 +1,14 @@
+crop,family,min_temp_c,max_temp_c,min_humidity_pct,max_humidity_pct,min_rainfall_mm,max_rainfall_mm,soil_types,min_ph,max_ph,water_need,base_water_mm_per_week
+Tomato,Solanaceae,18,29,40,70,400,600,Loamy|Sandy Loam,6.0,6.8,medium,25
+Potato,Solanaceae,15,24,60,80,500,700,Loamy|Sandy Loam,5.0,6.5,medium,30
+Corn,Poaceae,18,32,50,80,500,800,Loamy|Clay Loam,5.8,7.0,medium,25
+Apple,Rosaceae,12,24,60,80,1000,1250,Loamy,5.5,6.5,high,35
+Grape,Vitaceae,15,35,40,70,500,800,Sandy Loam|Loamy,6.0,7.5,medium,25
+BellPepper,Solanaceae,18,27,50,70,500,700,Loamy|Sandy Loam,5.5,6.8,medium,25
+Rice,Poaceae,20,35,60,90,1000,2000,Clay|Clay Loam,5.5,6.5,high,50
+Wheat,Poaceae,10,25,40,60,350,500,Loamy|Clay Loam,6.0,7.5,medium,20
+Cotton,Malvaceae,21,35,40,65,500,1000,Black Soil|Loamy,6.0,8.0,medium,22
+Sugarcane,Poaceae,20,38,60,85,1000,1500,Loamy|Clay Loam,6.0,7.5,high,45
+Soybean,Fabaceae,20,30,50,75,600,1000,Loamy|Black Soil,6.0,7.0,medium,20
+Groundnut,Fabaceae,22,32,50,75,500,750,Sandy Loam|Red Soil,6.0,6.5,medium,18
+Onion,Amaryllidaceae,13,28,50,70,350,600,Loamy|Sandy Loam,6.0,7.0,medium,22

@@ -1,0 +1,14 @@
+{
+  "results": [
+    {
+      "arch": "efficientnet_b0",
+      "checkpoint": "/kaggle/working/agrismart_ai/agrismart_ai/outputs/best_efficientnet_b0.pt",
+      "val_macro_f1": 0.9995897875013026
+    }
+  ],
+  "selected": {
+    "arch": "efficientnet_b0",
+    "checkpoint": "/kaggle/working/agrismart_ai/agrismart_ai/outputs/best_efficientnet_b0.pt",
+    "val_macro_f1": 0.9995897875013026
+  }
+}
