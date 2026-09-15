@@ -1,102 +1,80 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
+REM ============================================================
+REM AgriSmart AI - one-command launcher (Windows)
+REM
+REM What this does:
+REM   1. Installs backend dependencies (skip with START_SKIP_INSTALL=1)
+REM   2. Starts the Flask API server in its own window (port 8000)
+REM   3. Picks a free port for the frontend (tries 5500, 5501, 5502,
+REM      5173, 8080, 3000 in order - these match the backend's default
+REM      CORS_ORIGINS, so whichever one is actually free still works)
+REM   4. Serves the frontend folder as static files on that port
+REM   5. Waits until /api/health responds, THEN opens the app in your
+REM      default browser
+REM
+REM Usage: double-click start.bat, or run it from a terminal:
+REM   start.bat
+REM ============================================================
+
+setlocal enabledelayedexpansion
 cd /d "%~dp0"
-title VASUDHA - Smart Agriculture
 
-set "ROOT=%~dp0"
-set "BACKEND=%ROOT%backend"
-set "VENV=%BACKEND%\.venv"
-set "PYTHON=%VENV%\Scripts\python.exe"
-set "URL=http://127.0.0.1:8000/"
-
-if not exist "%BACKEND%\api_server.py" (
-  echo [ERROR] backend\api_server.py not found.
-  pause
-  exit /b 1
-)
-if not exist "%BACKEND%\.env" (
-  echo [INFO] backend\.env not found. Core local model can still run, but connected AI/database features may be unavailable.
-)
-
-where py >nul 2>&1
-if not errorlevel 1 set "PYLAUNCH=py -3"
-if not defined PYLAUNCH (
-  where python >nul 2>&1
-  if not errorlevel 1 set "PYLAUNCH=python"
-)
-if not defined PYLAUNCH (
-  echo [ERROR] Python 3 is required. Install Python 3 and run this launcher again.
-  pause
-  exit /b 1
-)
-
-if not exist "%PYTHON%" (
-  echo [1/3] Creating VASUDHA Python environment...
-  %PYLAUNCH% -m venv "%VENV%"
-  if errorlevel 1 (
-    echo [ERROR] Could not create the Python environment.
-    pause
-    exit /b 1
-  )
-)
-
-if not exist "%VENV%\.vasudha_deps_ok" (
-  echo [2/3] Installing required dependencies (first run only)...
-  "%PYTHON%" -m pip install --upgrade pip
-  if errorlevel 1 (
-    echo [ERROR] pip upgrade failed.
-    pause
-    exit /b 1
-  )
-  "%PYTHON%" -m pip install -r "%BACKEND%\requirements.txt"
-  if errorlevel 1 (
-    echo [ERROR] Dependency installation failed. Check your internet connection and try again.
-    pause
-    exit /b 1
-  )
-  type nul > "%VENV%\.vasudha_deps_ok"
+if "%START_SKIP_INSTALL%"=="1" (
+    echo Skipping dependency install ^(START_SKIP_INSTALL=1^)
 ) else (
-  echo [2/3] Dependencies already installed.
+    echo Installing backend dependencies...
+    python -m pip install -r "%~dp0backend\requirements.txt"
 )
 
-rem Stop stale VASUDHA launcher processes from a previous run when possible.
-for /f "tokens=5" %%P in ('netstat -ano ^| findstr ":8000 .*LISTENING"') do (
-  tasklist /FI "PID eq %%P" /FI "IMAGENAME eq python.exe" 2>nul | findstr /I "python.exe" >nul
-  if not errorlevel 1 taskkill /PID %%P /T /F >nul 2>&1
+echo.
+echo Starting AgriAI backend on http://127.0.0.1:8000 ...
+start "AgriAI Backend" cmd /k "cd /d "%~dp0backend" && python api_server.py"
+
+echo.
+echo Looking for a free port for the frontend...
+set FRONTEND_PORT=
+for %%P in (5500 5501 5502 5173 8080 3000) do (
+    if not defined FRONTEND_PORT (
+        netstat -ano | findstr ":%%P " | findstr "LISTENING" >nul
+        if errorlevel 1 set FRONTEND_PORT=%%P
+    )
 )
 
-if exist "%ROOT%frontend\index.html" (
-  echo [3/3] Starting VASUDHA...
-) else (
-  echo [ERROR] frontend\index.html not found.
-  pause
-  exit /b 1
+if not defined FRONTEND_PORT (
+    echo All of 5500/5501/5502/5173/8080/3000 are in use on this machine.
+    echo Close whatever is using one of them ^(often VS Code's Live Server^)
+    echo and re-run start.bat, or edit start.bat to add another port -
+    echo just remember to also add it to CORS_ORIGINS in backend\.env.
+    pause
+    exit /b 1
 )
 
-start "VASUDHA Backend" /min cmd /c "cd /d "%BACKEND%" && "%PYTHON%" api_server.py"
+echo Using port !FRONTEND_PORT! for the frontend ^(first free port found^).
+start "AgriAI Frontend" cmd /k "cd /d "%~dp0frontend" && python -m http.server !FRONTEND_PORT!"
 
-set /a tries=0
-:wait
-set /a tries+=1
-curl -s -o nul -w "%%{http_code}" "http://127.0.0.1:8000/api/health" 2>nul | findstr /R /C:"^200$" >nul
+echo.
+echo Waiting for the backend to come online...
+set tries=0
+
+:waitloop
+curl -s -o nul -w "%%{http_code}" http://127.0.0.1:8000/api/health 2>nul | findstr "200" >nul
 if not errorlevel 1 goto ready
-if !tries! GEQ 45 goto timeout
-timeout /t 1 /nobreak >nul
-goto wait
+
+set /a tries+=1
+if !tries! GEQ 40 (
+    echo.
+    echo Backend did not respond after 40 seconds - opening the app anyway.
+    echo Check the "AgriAI Backend" window for errors ^(e.g. Mongo connection^).
+    goto openbrowser
+)
+timeout /t 1 >nul
+goto waitloop
 
 :ready
-echo.
-echo ==============================================
-echo   VASUDHA is ready
- echo   http://127.0.0.1:8000/
-echo ==============================================
-echo.
-start "" "%URL%"
-exit /b 0
+echo Backend is up.
 
-:timeout
-echo.
-echo [ERROR] VASUDHA backend did not become ready within 45 seconds.
-echo Check the backend window for the actual error.
-pause
-exit /b 1
+:openbrowser
+echo Opening AgriSmart AI in your browser...
+start "" http://127.0.0.1:!FRONTEND_PORT!/index.html
+
+endlocal
