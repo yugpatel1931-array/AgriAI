@@ -1,30 +1,16 @@
 # AgriSmart AI Frontend
 
-Vanilla HTML, CSS, and JavaScript interface for the AgriSmart AI crop health assistant.
+Vanilla HTML, CSS, and JavaScript interface for AgriSmart AI.
 
 ## Technology
 
-HTML5 + CSS3 + Vanilla JavaScript
-
-No React, Vite, Tailwind, npm, or other frontend packages.
-
-## Why
-
-Zero dependencies and fast loading. The app can be opened as static files, which keeps the Smart India Hackathon demo reliable on machines where Node installs fail.
+HTML5 + CSS3 + Vanilla JavaScript. No React, Vite, Tailwind, npm, or frontend package installation is required.
 
 ## Run
 
-The frontend can be opened directly through:
+From this `frontend` directory:
 
-```text
-index.html
-```
-
-Double-click `frontend/index.html`, or open it from the browser.
-
-For local development, optionally use:
-
-```text
+```bash
 python -m http.server 5500
 ```
 
@@ -34,56 +20,50 @@ Then open:
 http://localhost:5500
 ```
 
-Python is optional. It is not an installation dependency of this frontend.
+The backend should be running separately at:
 
-A local static server is useful if a browser blocks `localStorage` or camera capture on `file://`.
+```text
+http://127.0.0.1:8000
+```
 
-## Pages
+The Analyze Crop flow sends the selected image to `POST /api/analyze`. Khedut Mitr sends farmer questions and the latest scan context to `POST /api/chat`.
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | Marketing landing page |
-| `dashboard.html` | Farmer overview, KPIs, recent scans |
-| `scan.html` | Image upload, camera, analysis loading |
-| `result.html` | Diagnosis, recommendations, print/save |
-| `history.html` | Searchable scan history |
-| `insights.html` | Health mix, common issues, trends |
-| `settings.html` | Profile and preferences |
-| `404.html` | Friendly missing-page screen |
+If the backend is hosted somewhere else, set `window.AGRI_API_BASE` before `js/mock-api.js` loads, and/or set `window.AGRI_GEMINI_API_BASE` before `js/gemini-api.js` loads.
 
 ## Architecture
 
 ```text
-HTML
- ↓
-CSS
- ↓
-Vanilla JS
- ↓
-Mock API (`js/mock-api.js`)
- ↓
-localStorage
+HTML / CSS
+    ↓
+Vanilla JavaScript
+    ↓
+AgriAPI (`js/mock-api.js`)
+    ├── Analyze Crop → backend `/api/analyze`
+    ├── local UI state/history → localStorage
+    └── bonus-module demo adapters
+
+Khedut Mitr (`js/gemini-api.js`)
+    ↓
+backend `/api/chat`
+    ↓
+Google Gemini (API key stays server-side)
 ```
 
-Shared chrome (navigation, footer, theme) lives in `js/app.js`.
-Each page has a dedicated script. All data access goes through `AgriAPI` in `js/mock-api.js`.
+## Real scan behavior
 
-localStorage keys:
+The Analyze Crop page no longer selects a hard-coded disease result. The uploaded file is sent as multipart form data to the backend and the result is stored with the backend scan ID.
+
+The result page uses the backend's real model class, confidence, advisory fields, and optional Grad-CAM explanation. The Grad-CAM view explains classifier focus; it is not a lesion detector. Thermal imagery is not fabricated when no thermal sensor data exists.
+
+## localStorage
 
 - `agrismart_scan_history`
 - `agrismart_settings`
 - `agrismart_last_result`
+- `agrismart_farm_context`
 
-## Future Backend Integration
+## Important
 
-`mock-api.js` currently returns demonstration results so the full farmer flow works without a live model.
-
-When the backend is ready, keep the same function names (`analyzeCrop`, `getScanHistory`, `getDashboardStats`, `getInsights`, `saveScan`) and switch the implementations to `fetch()` against the API documented in `docs/frontend-backend-api.md`.
-
-Page scripts should not need a rewrite if those contracts stay stable.
-
-## Design notes
-
-- Green is an accent on neutral surfaces, not a full-page theme.
-- Results are labeled as demonstration output.
-- Recommendations are informational guidance, not prescriptions.
+- Keep the backend running while using Analyze Crop or Khedut Mitr.
+- Do not put the Gemini API key in frontend files.
+- The frontend must not present demo/mock results as real model predictions.

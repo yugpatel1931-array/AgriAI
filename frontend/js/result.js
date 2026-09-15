@@ -152,19 +152,24 @@
     }
 
     if (!result) {
-      result = AgriAPI.getLastResult();
+      var lastResult = AgriAPI.getLastResult();
+      if (!id || (lastResult && String(lastResult.id) === String(id))) {
+        result = lastResult;
+      }
     }
 
-    // Fallback to recent scans so result.html NEVER renders blank
-    if (!result) {
+    // Only legacy/demo URLs may fall back to recent scans. A real scan ID must
+    // never silently turn into an unrelated demo prediction.
+    if (!result && !id) {
       var allScans = AgriAPI.getRecentScans ? AgriAPI.getRecentScans() : [];
       if (allScans && allScans.length > 0) {
         result = allScans[0];
       }
     }
 
-    // Ultimate fallback if localStorage is clean
-    if (!result) {
+    // Ultimate demo fallback is retained only for direct legacy result-page
+    // visits without a scan ID. The real Analyze Crop flow always supplies an ID.
+    if (!result && !id) {
       result = {
         id: "AGRI-GJ-2026-84921",
         crop: "Tomato",
@@ -189,8 +194,7 @@
     var reportId = (window.AgriApp && AgriApp.formatReportId)
       ? AgriApp.formatReportId(result.id, result.crop, result.scannedAt)
       : (result.id || "AGRI-GJ-2026-84921");
-    result.id = reportId;
-
+    // Keep the backend scan ID stable for history/refresh. reportId is display-only.
     AgriAPI.setLastResult(result);
 
     var root = document.getElementById("result-root");
@@ -223,6 +227,16 @@
       );
     }).join("");
 
+    var organicRecommendations = result.organicRecommendations || [];
+    var chemicalRecommendations = result.chemicalRecommendations || [];
+    var preventionItems = result.prevention || [];
+    var monitoringItems = result.monitoring || [];
+
+    function renderSimpleList(items) {
+      if (!items || !items.length) return '<p style="color:var(--text-muted);font-size:0.88rem;margin:0;">No additional guidance was returned for this scan.</p>';
+      return '<ul style="margin:0;padding-left:1.2rem;color:var(--text-main);line-height:1.55;font-size:0.88rem;">' + items.map(function (item) { return '<li style="margin:0.35rem 0;">' + AgriApp.escapeHtml(item) + '</li>'; }).join('') + '</ul>';
+    }
+
     root.innerHTML =
       '<div style="margin-bottom:1.5rem;">' +
       '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;gap:0.6rem;">' +
@@ -243,7 +257,7 @@
       '    </div>' +
       '    <div style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--forest-dark);font-weight:700;">' +
       '      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--leaf);"></span>' +
-      '      <span>Verified Platform Record &bull; Anand, Gujarat</span>' +
+      '      <span>AI Screening Record</span>' +
       '    </div>' +
       '  </div>' +
       '  <h1 style="font-size:2.2rem;margin-bottom:0.2rem;">Foliar Health Report</h1>' +
@@ -259,28 +273,22 @@
       '        <span style="font-size:0.8rem;font-weight:700;color:var(--text-subtle);text-transform:uppercase;letter-spacing:0.04em;">Inspector View Mode:</span>' +
       '        <div class="lesion-mode-toggle">' +
       '          <button type="button" class="lesion-mode-btn active" id="mode-btn-original">📷 Original</button>' +
-      '          <button type="button" class="lesion-mode-btn" id="mode-btn-lesion">🎯 AI Lesions</button>' +
+      '          <button type="button" class="lesion-mode-btn" id="mode-btn-lesion">🎯 AI Focus</button>' +
       '          <button type="button" class="lesion-mode-btn" id="mode-btn-thermal">🌡️ Thermal</button>' +
       '        </div>' +
       '      </div>' +
       '      <div class="result-image-box">' +
       '        <div class="lesion-viewer-container" id="lesion-viewer">' +
       '          <img id="result-img-elem" class="lesion-img-layer" src="' + imgSrc + '" alt="Scanned crop foliage">' +
-      '          <!-- AI Lesion Bounding Boxes -->' +
-      '          <div class="lesion-box" id="lbox-1" style="top:26%;left:28%;width:38%;height:44%;display:none;">' +
-      '            <span class="lesion-box-label">Necrotic Lesion ' + pct + '%</span>' +
-      '          </div>' +
-      '          <div class="lesion-box" id="lbox-2" style="top:58%;left:64%;width:24%;height:28%;border-color:#F59E0B;display:none;">' +
-      '            <span class="lesion-box-label" style="background:#F59E0B;">Spore Cluster 86%</span>' +
-      '          </div>' +
-      '          <!-- Thermal Stress Heatmap Overlay -->' +
-      '          <div class="thermal-heatmap-overlay" id="thermal-overlay" style="display:none;"></div>' +
+      '          <!-- Real Grad-CAM model-focus layer; not a lesion detector. -->' +
+      '          <img id="gradcam-img-elem" class="lesion-img-layer" src="" alt="Grad-CAM model focus explanation" style="display:none;">' +
+      '          <div id="inspector-notice" style="display:none;position:absolute;left:1rem;right:1rem;bottom:1rem;background:rgba(27,67,50,0.92);color:#fff;padding:0.65rem 0.8rem;border-radius:0.5rem;font-size:0.78rem;line-height:1.35;text-align:center;z-index:5;"></div>' +
       '        </div>' +
       '      </div>' +
       '      <div class="result-media-details">' +
       '        <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-subtle);margin-bottom:0.8rem;">' +
       '          <span>Image: <strong>' + AgriApp.escapeHtml(result.fileName || "camera-capture.jpg") + '</strong></span>' +
-      '          <span>Model: <strong>SIH 2.0 YOLOv8-PlantNet</strong></span>' +
+      '          <span>Model: <strong>' + AgriApp.escapeHtml(result.modelArchitecture || "EfficientNet-B0") + '</strong></span>' +
       '        </div>' +
       '        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">' +
       '          <button class="btn btn-primary" id="save-result-btn" style="flex:1;">' +
@@ -302,35 +310,35 @@
       '          <span style="font-size:1.3rem;">⛅</span>' +
       '          <div>' +
       '            <h4 style="font-size:0.98rem;margin:0;color:var(--text-main);">Live Agro-Weather & Spray Forecast</h4>' +
-      '            <span style="font-size:0.75rem;color:var(--text-muted);">Microclimate Telemetry &bull; Station 402</span>' +
+      '            <span style="font-size:0.75rem;color:var(--text-muted);">Check current conditions in the Weather module before spraying.</span>' +
       '          </div>' +
       '        </div>' +
-      '        <span class="badge badge-success" style="font-size:0.75rem;">Realtime</span>' +
+      '        <span class="badge badge-success" style="font-size:0.75rem;">Guidance</span>' +
       '      </div>' +
       '      <div class="weather-badges-grid">' +
       '        <div class="weather-badge-pill">' +
       '          <span style="font-size:1.1rem;">🌡️</span>' +
-      '          <div><strong>26.4°C</strong><small>Ambient Temp</small></div>' +
+      '          <div><strong>Live check</strong><small>Ambient Temp</small></div>' +
       '        </div>' +
       '        <div class="weather-badge-pill">' +
       '          <span style="font-size:1.1rem;">💧</span>' +
-      '          <div><strong>82% RH</strong><small>High Spore Risk</small></div>' +
+      '          <div><strong>Live check</strong><small>Humidity</small></div>' +
       '        </div>' +
       '        <div class="weather-badge-pill">' +
       '          <span style="font-size:1.1rem;">💨</span>' +
-      '          <div><strong>5.8 km/h</strong><small>Calm Wind</small></div>' +
+      '          <div><strong>Live check</strong><small>Wind</small></div>' +
       '        </div>' +
       '        <div class="weather-badge-pill">' +
       '          <span style="font-size:1.1rem;">☔</span>' +
-      '          <div><strong>12% Rain</strong><small>8h Dry Window</small></div>' +
+      '          <div><strong>Live check</strong><small>Rain</small></div>' +
       '        </div>' +
       '      </div>' +
       '      <div class="spray-window-banner">' +
       '        <div style="display:flex;align-items:flex-start;gap:0.6rem;">' +
       '          <span style="font-size:1.3rem;margin-top:0.1rem;">🎯</span>' +
       '          <div>' +
-      '            <strong class="spray-window-title">OPTIMAL SPRAY WINDOW: Tomorrow 06:30 AM – 09:00 AM</strong>' +
-      '            <span class="spray-window-desc">Low thermal updrafts & ideal foliar stomatal opening ensure maximum chemical/bio absorption without drift.</span>' +
+      '            <strong class="spray-window-title">CHECK WEATHER BEFORE SPRAYING</strong>' +
+      '            <span class="spray-window-desc">Do not rely on a static spray time. Check current rain, wind, temperature and label requirements in the Weather module before application.</span>' +
       '          </div>' +
       '        </div>' +
       '      </div>' +
@@ -371,14 +379,14 @@
       '        <strong style="font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.88rem;letter-spacing:0.04em;color:var(--forest-dark);">' + AgriApp.escapeHtml(reportId) + '</strong>' +
       '      </div>' +
       '      <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.9rem;">' +
-      '        Print-ready field advisory containing diagnosed leaf symptoms, calculated field spray dosage, knapsack tank calculations, and live weather spray timing.' +
+      '        Print-ready screening report containing the model result, confidence, advisory guidance, and scan record.' +
       '      </p>' +
       '      <div class="rx-inclusion-tags" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.1rem;font-size:0.74rem;font-weight:700;">' +
-      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ AI Pathology Detection</span>' +
-      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Field Spray Dosages</span>' +
-      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ 28–29 Knapsack Tanks</span>' +
-      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Weather &amp; Spray Timing</span>' +
-      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Digital Verification</span>' +
+      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ AI Image Classification</span>' +
+      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Disease Advisory</span>' +
+      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Safety Guidance</span>' +
+      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Weather Check</span>' +
+      '        <span style="background:var(--bg-surface);border:1px solid var(--border);padding:0.25rem 0.55rem;border-radius:var(--radius-full);color:var(--text-main);">✓ Digital Record</span>' +
       '      </div>' +
       '      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0.7rem;">' +
       '        <button class="btn btn-primary" id="print-report-btn" type="button" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;font-weight:700;padding:0.75rem 1rem;background:linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);box-shadow:0 4px 14px rgba(27,67,50,0.3);">' +
@@ -420,7 +428,7 @@
       '        <p style="color:var(--text-main);line-height:1.6;font-size:0.95rem;margin-bottom:1.2rem;">' +
       '          ' + AgriApp.escapeHtml(result.explanation) +
       '        </p>' +
-      '        <h4 style="margin-bottom:0.4rem;font-size:0.95rem;color:var(--metric-highlight);">Observed Diagnostic Markers</h4>' +
+      '        <h4 style="margin-bottom:0.4rem;font-size:0.95rem;color:var(--metric-highlight);">Diagnostic Markers to Check</h4>' +
       '        <ul style="list-style:none;padding:0;margin-bottom:1.2rem;">' + symptomsList + '</ul>' +
       '      </div>' +
 
@@ -448,8 +456,8 @@
       '        <div style="display:flex;align-items:center;gap:0.6rem;">' +
       '          <span style="font-size:1.4rem;">🧮</span>' +
       '          <div>' +
-      '            <h3 style="font-size:1.08rem;margin:0;color:var(--text-main);">Field Dosage & Acreage Spray Calculator</h3>' +
-      '            <span style="font-size:0.75rem;color:var(--text-muted);">Calibrated Field Spray Dilution Formula</span>' +
+      '            <h3 style="font-size:1.08rem;margin:0;color:var(--text-main);">Field Planning Calculator</h3>' +
+      '            <span style="font-size:0.75rem;color:var(--text-muted);">Use the confirmed product label for application rates</span>' +
       '          </div>' +
       '        </div>' +
       '        <span class="badge badge-success" style="font-size:0.75rem;">Interactive</span>' +
@@ -471,29 +479,29 @@
       '      <div class="calc-metrics-grid">' +
       '        <div class="calc-metric-box">' +
       '          <div class="calc-lbl">Water Volume</div>' +
-      '          <div class="calc-val" id="calc-water-val">450 L</div>' +
-      '          <small style="font-size:0.72rem;color:var(--text-muted);">180 L / Acre volume</small>' +
+      '          <div class="calc-val" id="calc-water-val">Label</div>' +
+      '          <small style="font-size:0.72rem;color:var(--text-muted);">Follow sprayer/product label</small>' +
       '        </div>' +
       '        <div class="calc-metric-box">' +
-      '          <div class="calc-lbl">Active Dosage</div>' +
-      '          <div class="calc-val" id="calc-dose-val">1,125 g</div>' +
-      '          <small style="font-size:0.72rem;color:var(--text-muted);">2.5 g / Liter dilution</small>' +
+      '          <div class="calc-lbl">Product Dose</div>' +
+      '          <div class="calc-val" id="calc-dose-val">Label</div>' +
+      '          <small style="font-size:0.72rem;color:var(--text-muted);">No dose is inferred by the AI scan</small>' +
       '        </div>' +
       '        <div class="calc-metric-box">' +
-      '          <div class="calc-lbl">Knapsack Tanks</div>' +
-      '          <div class="calc-val" id="calc-tanks-val">29 Tanks</div>' +
-      '          <small style="font-size:0.72rem;color:var(--text-muted);">16L knapsack sprayer</small>' +
+      '          <div class="calc-lbl">Tank Count</div>' +
+      '          <div class="calc-val" id="calc-tanks-val">Capacity</div>' +
+      '          <small style="font-size:0.72rem;color:var(--text-muted);">Depends on your sprayer</small>' +
       '        </div>' +
       '        <div class="calc-metric-box">' +
-      '          <div class="calc-lbl">Est. Treatment Cost</div>' +
-      '          <div class="calc-val" id="calc-cost-val" style="color:var(--fresh);">₹ 700</div>' +
-      '          <small style="font-size:0.72rem;color:var(--text-muted);">₹ 280 / acre estimate</small>' +
+      '          <div class="calc-lbl">Treatment Cost</div>' +
+      '          <div class="calc-val" id="calc-cost-val" style="color:var(--fresh);">Not set</div>' +
+      '          <small style="font-size:0.72rem;color:var(--text-muted);">Requires local product/price data</small>' +
       '        </div>' +
       '      </div>' +
 
       '      <div style="margin-top:1rem;padding:0.75rem 1rem;background:var(--bg-sand);border-radius:var(--radius-sm);font-size:0.84rem;display:flex;align-items:center;gap:0.6rem;">' +
       '        <span style="font-size:1.2rem;">💡</span>' +
-      '        <span style="color:var(--text-main);"><strong>Calibrated Nozzle Recommendation:</strong> Use a hollow cone nozzle at 3 bar pressure in calm morning hours for 94% leaf undersurface coverage.</span>' +
+      '        <span style="color:var(--text-main);"><strong>Safety reminder:</strong> Use the nozzle, pressure, dilution, PPE and spray interval specified on the locally registered product label.</span>' +
       '      </div>' +
       '    </div>' +
       '  </div>' +
@@ -517,7 +525,7 @@
       '      <div class="rx-qr-code">' +
       '        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1B4332" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>' +
       '      </div>' +
-      '      <small style="font-weight:800;letter-spacing:0.06em;color:#1B4332;">VERIFIED</small>' +
+      '      <small style="font-weight:800;letter-spacing:0.06em;color:#1B4332;">AI RECORD</small>' +
       '      <div style="font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.68rem;font-weight:700;color:#2D6A4F;letter-spacing:0.02em;">' + AgriApp.escapeHtml(reportId) + '</div>' +
       '    </div>' +
       '  </div>' +
@@ -526,9 +534,9 @@
       '    <div class="rx-meta-cell"><label>Official Report ID:</label><strong style="font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:1.02rem;color:#1B4332;letter-spacing:0.04em;">' + AgriApp.escapeHtml(reportId) + '</strong></div>' +
       '    <div class="rx-meta-cell"><label>Scan Date &amp; Time:</label><strong>' + AgriApp.formatDate(result.scannedAt) + '</strong></div>' +
       '    <div class="rx-meta-cell"><label>Registered Farmer:</label><strong>' + AgriApp.escapeHtml(farmerName) + '</strong></div>' +
-      '    <div class="rx-meta-cell"><label>Farm Location:</label><strong>' + AgriApp.escapeHtml(farmName) + ', Anand, Gujarat</strong></div>' +
-      '    <div class="rx-meta-cell"><label>Assessed Plot:</label><strong>2.50 Acres (Loamy Soil)</strong></div>' +
-      '    <div class="rx-meta-cell"><label>AI Vision Model:</label><strong>AgriSmart AI YOLOv8-PlantNet (' + pct + '% Confidence)</strong></div>' +
+      '    <div class="rx-meta-cell"><label>Farm:</label><strong>' + AgriApp.escapeHtml(farmName) + '</strong></div>' +
+      '    <div class="rx-meta-cell"><label>Field Measurements:</label><strong>Not supplied by this image scan</strong></div>' +
+      '    <div class="rx-meta-cell"><label>AI Vision Model:</label><strong>AgriSmart AI ' + AgriApp.escapeHtml(result.modelArchitecture || 'EfficientNet-B0') + ' (' + pct + '% Confidence)</strong></div>' +
       '  </div>' +
 
       '  <div class="rx-section">' +
@@ -538,19 +546,19 @@
       '        <table class="rx-spec-table">' +
       '          <tr><td>Target Crop:</td><td><strong>' + AgriApp.escapeHtml(result.crop) + '</strong></td></tr>' +
       '          <tr><td>Detected Condition:</td><td><strong>' + AgriApp.escapeHtml(result.disease) + '</strong></td></tr>' +
-      '          <tr><td>Detection Confidence:</td><td><strong style="color:#2D6A4F;">' + pct + '% (Verified AI Match)</strong></td></tr>' +
+      '          <tr><td>Detection Confidence:</td><td><strong style="color:#2D6A4F;">' + pct + '% model confidence</strong></td></tr>' +
       '          <tr><td>Risk &amp; Urgency:</td><td><span class="rx-risk-tag">' + AgriApp.escapeHtml(result.risk).toUpperCase() + ' RISK &bull; ACTION RECOMMENDED</span></td></tr>' +
       '        </table>' +
       '      </div>' +
       '      <div>' +
       '        <div class="rx-markers-box">' +
-      '          <strong>Observed Leaf Symptoms:</strong>' +
+      '          <strong>Diagnostic Markers to Check:</strong>' +
       '          <ul>' + symptomsList + '</ul>' +
       '        </div>' +
       '      </div>' +
       '    </div>' +
       '    <div class="rx-etiology-box">' +
-      '      <strong>Diagnosis Summary:</strong> ' + AgriApp.escapeHtml(result.explanation) + ' Early treatment prevents spore spread across adjacent healthy plants.' +
+      '      <strong>Screening Summary:</strong> ' + AgriApp.escapeHtml(result.explanation) +
       '    </div>' +
       '  </div>' +
 
@@ -589,32 +597,36 @@
       '  </div>' +
 
       '  <div class="rx-section">' +
-      '    <div class="rx-section-title">III. LIVE WEATHER CONDITIONS &amp; SPRAY TIMING</div>' +
-      '    <div class="rx-weather-box">' +
-      '      <div class="rx-weather-telemetry">' +
-      '        <div><span>Local Temperature:</span> <strong>30.0°C</strong></div>' +
-      '        <div><span>Relative Humidity:</span> <strong>78% (Elevated foliar moisture)</strong></div>' +
-      '        <div><span>Wind Velocity:</span> <strong>8.5 km/h (Calm breeze &bull; Low drift)</strong></div>' +
-      '        <div><span>Rain Probability:</span> <strong>78% Rain (~22mm expected)</strong></div>' +
+      '    <div class="rx-section-title">II. RECOMMENDED FIELD GUIDANCE</div>' +
+      '    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">' +
+      '      <div class="rx-markers-box">' +
+      '        <strong>Organic &amp; Biological Guidance:</strong>' +
+      '        ' + renderSimpleList(organicRecommendations) +
       '      </div>' +
-      '      <div class="rx-spray-window">' +
-      '        <strong style="color:#1B4332;display:block;margin-bottom:0.25rem;">⚠️ WEATHER ADVISORY: HOLD OFF ON SPRAYING TODAY</strong>' +
-      '        <span>Rain is predicted today in Anand, Gujarat (~22mm). Any spray applied today will be washed off by rain. <strong>Recommended Spray Window: Tomorrow Morning 06:30 AM &ndash; 09:00 AM</strong> once leaves dry and wind remains calm (&lt;10 km/h).</span>' +
+      '      <div class="rx-markers-box">' +
+      '        <strong>Chemical Safety Guidance:</strong>' +
+      '        ' + renderSimpleList(chemicalRecommendations) +
       '      </div>' +
+      '    </div>' +
+      '    <div class="rx-legal-notice" style="margin-top:0.75rem;">Use only locally registered products labelled for the confirmed crop/disease. Follow the product label for dose, PPE, application interval and pre-harvest interval; consult a KVK/agriculture officer when unsure.</div>' +
+      '  </div>' +
+
+      '  <div class="rx-section">' +
+      '    <div class="rx-section-title">III. PREVENTION &amp; FOLLOW-UP</div>' +
+      '    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">' +
+      '      <div class="rx-markers-box"><strong>Prevention:</strong>' + renderSimpleList(preventionItems) + '</div>' +
+      '      <div class="rx-markers-box"><strong>What to Monitor:</strong>' + renderSimpleList(monitoringItems) + '</div>' +
+      '    </div>' +
+      '    <div class="rx-spray-window" style="margin-top:0.75rem;">' +
+      '      <strong style="color:#1B4332;display:block;margin-bottom:0.25rem;">WEATHER CHECK BEFORE SPRAYING</strong>' +
+      '      <span>This diagnosis response does not contain live weather measurements. Check current rain, wind, temperature and humidity in the Weather module before any foliar application.</span>' +
       '    </div>' +
       '  </div>' +
 
       '  <div class="rx-section">' +
-      '    <div class="rx-section-title">IV. SMART IRRIGATION &amp; SUSTAINABILITY ADVISORY</div>' +
-      '    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.84rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">' +
-      '      <div>' +
-      '        <strong style="color:#1B4332;display:block;margin-bottom:0.2rem;">💧 Soil Moisture &amp; Irrigation:</strong>' +
-      '        <span>Current soil moisture is <strong>31% (Adequate)</strong>. Pausing irrigation today and utilizing expected rainfall will save an estimated <strong>14,000 Liters of water per acre</strong>.</span>' +
-      '      </div>' +
-      '      <div>' +
-      '        <strong style="color:#1B4332;display:block;margin-bottom:0.2rem;">♻️ Farm Health Score:</strong>' +
-      '        <span>Current Farm Score is <strong>82 / 100</strong> (14% better than Anand district average). Using biological neem spray instead of chemical pesticides will lift your spray balance score to 88+.</span>' +
-      '      </div>' +
+      '    <div class="rx-section-title">IV. IRRIGATION &amp; SUSTAINABILITY NOTE</div>' +
+      '    <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:var(--radius-sm);padding:0.85rem 1rem;font-size:0.84rem;line-height:1.5;">' +
+      '      Scan results alone do not measure soil moisture, water use, yield, or sustainability. Use the dedicated Irrigation and Sustainability modules with their connected farm inputs for those assessments.' +
       '    </div>' +
       '  </div>' +
 
@@ -626,18 +638,18 @@
       '    <div class="rx-seal-box">' +
       '      <div class="rx-seal-stamp" style="border:2px solid #2D6A4F;color:#1B4332;">' +
       '        <span>AGRISMART AI</span>' +
-      '        <strong>VERIFIED</strong>' +
-      '        <small>Digital Scan #' + AgriApp.escapeHtml(result.id) + '</small>' +
+      '        <strong>AI RECORD</strong>' +
+      '        <small>Digital Scan #' + AgriApp.escapeHtml(reportId) + '</small>' +
       '      </div>' +
       '    </div>' +
       '    <div class="rx-sig-box">' +
       '      <div class="rx-sig-line">' + AgriApp.escapeHtml(farmerName) + '</div>' +
-      '      <small>Farmer Acknowledgment &bull; Patel Farm, Anand</small>' +
+      '      <small>Farmer Acknowledgment</small>' +
       '    </div>' +
       '  </div>' +
 
       '  <div class="rx-legal-notice" style="font-size:0.72rem;color:#6B7280;text-align:center;margin-top:1rem;padding-top:0.6rem;border-top:1px dashed #D1D5DB;">' +
-      '    <strong>AgriSmart AI Verified Digital Record (ID: ' + AgriApp.escapeHtml(reportId) + '):</strong> Authenticated via AgriSmart YOLOv8-PlantNet Diagnostic System. Valid for Anand District Agro-Advisory &amp; KVK Extension.' +
+      '    <strong>AgriSmart AI Verified Digital Record (ID: ' + AgriApp.escapeHtml(reportId) + '):</strong> Generated from the AgriSmart AI image-model screening result. This record is not a laboratory diagnosis or a substitute for local agricultural advice.' +
       '  </div>' +
       '</div>' +
 
@@ -712,34 +724,44 @@
       });
     }
 
-    // 2. Interactive Lesion Inspector Mode Switching
+    // 2. Interactive model-focus inspector. Grad-CAM explains where the CNN
+    // focused; it is not a bounding-box lesion detector or thermal sensor.
     var btnOriginal = document.getElementById("mode-btn-original");
     var btnLesion = document.getElementById("mode-btn-lesion");
     var btnThermal = document.getElementById("mode-btn-thermal");
-    var lbox1 = document.getElementById("lbox-1");
-    var lbox2 = document.getElementById("lbox-2");
-    var thermalOverlay = document.getElementById("thermal-overlay");
+    var gradcamImg = document.getElementById("gradcam-img-elem");
+    var inspectorNotice = document.getElementById("inspector-notice");
 
     function setInspectorMode(mode) {
       [btnOriginal, btnLesion, btnThermal].forEach(function (b) {
         if (b) b.classList.remove("active");
       });
+      if (gradcamImg) gradcamImg.style.display = "none";
+      if (imgEl) imgEl.style.display = "block";
+      if (inspectorNotice) inspectorNotice.style.display = "none";
 
       if (mode === "original") {
         if (btnOriginal) btnOriginal.classList.add("active");
-        if (lbox1) lbox1.style.display = "none";
-        if (lbox2) lbox2.style.display = "none";
-        if (thermalOverlay) thermalOverlay.style.display = "none";
       } else if (mode === "lesion") {
         if (btnLesion) btnLesion.classList.add("active");
-        if (lbox1) lbox1.style.display = "block";
-        if (lbox2) lbox2.style.display = "block";
-        if (thermalOverlay) thermalOverlay.style.display = "none";
+        if (result.gradcamDataUrl && gradcamImg) {
+          gradcamImg.src = result.gradcamDataUrl;
+          gradcamImg.style.display = "block";
+          if (imgEl) imgEl.style.display = "none";
+          if (inspectorNotice) {
+            inspectorNotice.textContent = "AI Focus (Grad-CAM): highlights image regions that influenced the classifier. It does not locate or measure lesions.";
+            inspectorNotice.style.display = "block";
+          }
+        } else if (inspectorNotice) {
+          inspectorNotice.textContent = "Model-focus visualization is not available for this scan.";
+          inspectorNotice.style.display = "block";
+        }
       } else if (mode === "thermal") {
         if (btnThermal) btnThermal.classList.add("active");
-        if (lbox1) lbox1.style.display = "none";
-        if (lbox2) lbox2.style.display = "none";
-        if (thermalOverlay) thermalOverlay.style.display = "block";
+        if (inspectorNotice) {
+          inspectorNotice.textContent = "Thermal imagery requires a thermal sensor. No thermal sensor data was provided for this scan.";
+          inspectorNotice.style.display = "block";
+        }
       }
     }
 
@@ -756,16 +778,11 @@
     var costVal = document.getElementById("calc-cost-val");
 
     function updateDosageCalculations(acres) {
-      var waterLiters = Math.round(acres * 180);
-      var doseGrams = Math.round(acres * 450);
-      var tanksCount = Math.ceil(waterLiters / 16);
-      var estCost = Math.round(acres * 280);
-
       if (acresLabel) acresLabel.textContent = acres.toFixed(1) + " Acres";
-      if (waterVal) waterVal.textContent = waterLiters.toLocaleString() + " L";
-      if (doseVal) doseVal.textContent = doseGrams >= 1000 ? (doseGrams / 1000).toFixed(2) + " kg" : doseGrams + " g";
-      if (tanksVal) tanksVal.textContent = tanksCount + " Tanks";
-      if (costVal) costVal.textContent = "₹ " + estCost.toLocaleString();
+      if (waterVal) waterVal.textContent = "Label";
+      if (doseVal) doseVal.textContent = "Label";
+      if (tanksVal) tanksVal.textContent = "Capacity";
+      if (costVal) costVal.textContent = "Not set";
     }
 
     if (acresSlider) {
@@ -868,11 +885,38 @@
       });
     }
 
-    // 7. Tabs for Organic vs Chemical
+    // 7. Tabs for Organic vs Chemical — use only advisory data returned by the backend.
     var tabAll = document.getElementById("tab-all");
     var tabOrganic = document.getElementById("tab-organic");
     var tabChemical = document.getElementById("tab-chemical");
     var treatmentBox = document.getElementById("treatment-content");
+
+    function escapeList(items) {
+      return (items || []).map(function (rec) {
+        return (
+          '<li class="treatment-item">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+          '<span>' + AgriApp.escapeHtml(rec) + '</span>' +
+          '</li>'
+        );
+      }).join("");
+    }
+
+    function emptyAdvice(message) {
+      return '<p style="color:var(--text-muted);font-size:0.9rem;margin:0;">' + AgriApp.escapeHtml(message) + '</p>';
+    }
+
+    function renderAdvice(title, items, tone) {
+      var bg = tone === "organic" ? "var(--success-soft)" : "var(--warning-soft)";
+      var border = tone === "organic" ? "var(--success-border)" : "var(--warning-border)";
+      var heading = tone === "organic" ? "var(--success)" : "var(--warning)";
+      return (
+        '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;">' +
+        '<h4 style="color:' + heading + ';font-size:0.92rem;margin-bottom:0.4rem;">' + AgriApp.escapeHtml(title) + '</h4>' +
+        ((items && items.length) ? '<ul class="treatment-list">' + escapeList(items) + '</ul>' : emptyAdvice("No specific advisory was returned for this scan.")) +
+        '</div>'
+      );
+    }
 
     function setTabActive(activeBtn) {
       [tabAll, tabOrganic, tabChemical].forEach(function (btn) {
@@ -881,40 +925,31 @@
       if (activeBtn) activeBtn.classList.add("active");
     }
 
+    function showAllAdvice() {
+      var all = (result.recommendations || []);
+      treatmentBox.innerHTML = all.length
+        ? '<ul class="treatment-list">' + escapeList(all) + '</ul>'
+        : emptyAdvice("No treatment recommendation was returned. Confirm the model result with a local agriculture expert before treating the crop.");
+    }
+
     if (tabAll) {
       tabAll.addEventListener("click", function () {
         setTabActive(tabAll);
-        treatmentBox.innerHTML = '<ul class="treatment-list">' + recommendationsList + '</ul>';
+        showAllAdvice();
       });
     }
 
     if (tabOrganic) {
       tabOrganic.addEventListener("click", function () {
         setTabActive(tabOrganic);
-        treatmentBox.innerHTML =
-          '<div style="background:var(--success-soft);border:1px solid var(--success-border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;">' +
-          '  <h4 style="color:var(--success);font-size:0.92rem;margin-bottom:0.4rem;">Certified Organic & Biological Remedies</h4>' +
-          '  <ul class="treatment-list">' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Apply 0.5% Neem Seed Kernel Extract (NSKE) or commercial cold-pressed neem oil (5 ml / liter of water) with emulsifier.</span></li>' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Foliar spray of antagonistic biocontrol agent <em>Trichoderma viride</em> or <em>Pseudomonas fluorescens</em> (10 g / liter).</span></li>' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Prune severely infected lower leaves and safely compost away from active fields.</span></li>' +
-          '  </ul>' +
-          '</div>';
+        treatmentBox.innerHTML = renderAdvice("Organic & Biological Guidance", result.organicRecommendations || [], "organic");
       });
     }
 
     if (tabChemical) {
       tabChemical.addEventListener("click", function () {
         setTabActive(tabChemical);
-        treatmentBox.innerHTML =
-          '<div style="background:var(--warning-soft);border:1px solid var(--warning-border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1rem;">' +
-          '  <h4 style="color:var(--warning);font-size:0.92rem;margin-bottom:0.4rem;">Calibrated Chemical Interventions</h4>' +
-          '  <ul class="treatment-list">' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Foliar spray of Mancozeb 75% WP @ 2.0 to 2.5 g / liter of water, ensuring uniform coverage on upper and lower leaf surfaces.</span></li>' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Alternatively, Chlorothalonil 75% WP @ 2 g / liter at first symptom appearance. Repeat after 10-14 days if wet weather persists.</span></li>' +
-          '    <li class="treatment-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>Observe pre-harvest interval (PHI) of minimum 7 days before harvesting edible fruits or foliage.</span></li>' +
-          '  </ul>' +
-          '</div>';
+        treatmentBox.innerHTML = renderAdvice("Chemical Safety Guidance", result.chemicalRecommendations || [], "chemical");
       });
     }
   });

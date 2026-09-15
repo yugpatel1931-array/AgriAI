@@ -201,6 +201,7 @@
     compressImage(selectedFile)
       .then(function (dataUrl) {
         return AgriAPI.analyzeCrop({
+          file: selectedFile,
           fileName: selectedFile.name,
           fileSize: selectedFile.size,
           imageDataUrl: dataUrl,

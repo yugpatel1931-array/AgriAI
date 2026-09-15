@@ -1082,29 +1082,94 @@
     };
   }
 
-  function analyzeCrop(payload) {
-    ensureSeed();
-    var wait = 1700 + Math.floor(Math.random() * 900);
-    return delay(wait).then(function () {
-      if (payload && payload.forceError) {
-        return Promise.reject({
-          code: "ANALYSIS_FAILED",
-          message: "Analysis could not be completed. Please try again."
-        });
-      }
-      var key = (payload && (payload.fileName + payload.fileSize)) || String(Date.now());
-      var pick = DEMO_CATALOG[hashString(key) % DEMO_CATALOG.length];
-      var result = Object.assign({}, pick, {
-        id: uid(),
-        scannedAt: new Date().toISOString(),
-        fileName: payload && payload.fileName ? payload.fileName : "crop-image",
-        imageDataUrl: payload && payload.imageDataUrl ? payload.imageDataUrl : "",
-        demo: true,
-        saved: false
-      });
-      setLastResult(result);
-      return result;
+  // Real crop-analysis API adapter.
+  // The frontend keeps AgriAPI as the single data boundary, but the Analyze Crop
+  // flow now calls the backend instead of selecting a demo prediction.
+  var ANALYZE_API_BASE = global.AGRI_API_BASE || global.AGRI_BACKEND_API_BASE || "http://127.0.0.1:8000";
+
+  function normalizeAnalysisResponse(raw, payload) {
+    var data = raw && (raw.result || raw.prediction || raw.data) ? (raw.result || raw.prediction || raw.data) : raw;
+    data = data || {};
+
+    var confidence = data.confidence;
+    if (confidence == null && data.score != null) confidence = data.score;
+    confidence = Number(confidence);
+    if (!isFinite(confidence)) confidence = null;
+    if (confidence != null && confidence > 1) confidence = confidence / 100;
+
+    var crop = data.crop || data.crop_name || data.cropName || data.plant || data.plant_name || data.plantName;
+    var disease = data.disease || data.condition || data.diagnosis || data.label || data.class_name || data.className || data.predicted_class || data.prediction_label;
+    var risk = data.risk || data.severity || data.health_status || data.status;
+
+    if (!crop) crop = "Unknown crop";
+    if (!disease) disease = "Unknown condition";
+    if (!risk) risk = String(disease).toLowerCase() === "healthy" ? "Low" : "Moderate";
+
+    if (!data.id && !data.scan_id && !data.scanId) {
+      throw new Error("The analysis service returned no scan ID.");
+    }
+
+    return Object.assign({}, data, {
+      id: data.id || data.scan_id || data.scanId,
+      crop: crop,
+      disease: disease,
+      confidence: confidence == null ? 0 : confidence,
+      risk: risk,
+      scannedAt: data.scannedAt || data.scanned_at || new Date().toISOString(),
+      fileName: (payload && payload.fileName) || data.fileName || "crop-image",
+      imageDataUrl: (payload && payload.imageDataUrl) || data.imageDataUrl || "",
+      demo: false,
+      saved: false
     });
+  }
+
+  function analyzeCrop(payload) {
+    payload = payload || {};
+
+    if (!payload.file) {
+      return Promise.reject(new Error("The selected image could not be prepared for analysis."));
+    }
+
+    var body = new FormData();
+    body.append("image", payload.file, payload.fileName || payload.file.name || "crop-image");
+
+    if (payload.cropHint) body.append("cropHint", payload.cropHint);
+    if (payload.growthStage) body.append("growthStage", payload.growthStage);
+    if (payload.symptoms) body.append("symptoms", payload.symptoms);
+    if (payload.notes) body.append("notes", payload.notes);
+
+    return fetch(ANALYZE_API_BASE + "/api/analyze", {
+      method: "POST",
+      body: body
+    })
+      .then(function (response) {
+        return response.text().then(function (text) {
+          var data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (e) {
+            data = {};
+          }
+
+          if (!response.ok) {
+            var message = data.message || data.detail || data.error || "Crop analysis failed. Please try again.";
+            throw new Error(message);
+          }
+
+          return data;
+        });
+      })
+      .then(function (data) {
+        var result = normalizeAnalysisResponse(data, payload);
+        setLastResult(result);
+        return result;
+      })
+      .catch(function (err) {
+        if (err instanceof TypeError && /fetch/i.test(String(err.message))) {
+          throw new Error("The crop analysis server is unavailable. Please start the backend and try again.");
+        }
+        throw err;
+      });
   }
 
   ensureSeed();

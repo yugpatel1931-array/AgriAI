@@ -468,19 +468,6 @@
       if (!Number.isNaN(d.getTime())) year = String(d.getFullYear());
     }
     var cropStr = (crop || "").toLowerCase();
-    var defaultNums = {
-      tomato: "84921",
-      potato: "72814",
-      chilli: "63952",
-      cotton: "51209",
-      wheat: "47318",
-      rice: "39185"
-    };
-    for (var k in defaultNums) {
-      if (cropStr.indexOf(k) !== -1 || raw.toLowerCase().indexOf(k) !== -1) {
-        return "AGRI-GJ-" + year + "-" + defaultNums[k];
-      }
-    }
     var hash = 0;
     for (var i = 0; i < raw.length; i++) {
       hash = ((hash << 5) - hash) + raw.charCodeAt(i);
