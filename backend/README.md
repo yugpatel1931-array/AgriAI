@@ -341,6 +341,28 @@ POST http://127.0.0.1:8000/api/chat
 
 Set at least one Khedut Mitr provider API key in a local `.env` file. Do not commit `.env` or expose the key to the frontend.
 
+### Data persistence (MongoDB, optional)
+
+By default nothing is saved anywhere — `/api/analyze` and `/api/chat` just
+return their result. To persist predictions and chat history, set
+`MONGODB_URI` in `.env` (see `.env.example`):
+
+- **Local**: `MONGODB_URI=mongodb://localhost:27017/` (requires MongoDB
+  running locally).
+- **Cloud**: create a free [MongoDB Atlas](https://www.mongodb.com/atlas)
+  cluster and use its connection string, e.g.
+  `mongodb+srv://<user>:<password>@<cluster>.mongodb.net/`.
+
+With `MONGODB_URI` unset, the app behaves exactly as before — no
+connection is attempted, so there's no startup delay or timeout. With it
+set, `api_server.py` creates the `agrismart_ai` database (override the
+name with `MONGODB_DB`) on startup, and writes a document to the
+`predictions` collection on every successful `/api/analyze` call and to
+`chat_history` on every successful `/api/chat` call. Check
+`GET /api/health` for `database_configured` and `database_connected` to
+confirm it's wired up. Schemas live in `src/database/models.py`; the
+connection/collection helpers live in `src/database/connection.py`.
+
 Offline API contract smoke test:
 
 ```bash

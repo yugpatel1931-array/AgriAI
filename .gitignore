@@ -1,0 +1,5 @@
+# OS / editor junk (repo-wide)
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

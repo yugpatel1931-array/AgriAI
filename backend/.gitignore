@@ -1,4 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
 
 # Secrets / local environment
 .env
 *.env
+
+# Dataset -- never commit raw images to git. Fetch the dataset separately
+# (see README.md) and drop it here locally; .gitkeep keeps the empty
+# folder itself tracked so `data/raw/` still exists after a fresh clone.
+data/raw/*
+!data/raw/.gitkeep
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

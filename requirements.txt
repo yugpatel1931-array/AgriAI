@@ -1,0 +1,12 @@
+# Root-level pointer, per the submission-contract structure requirement
+# (Section 7.1: "requirements.txt / environment file").
+#
+# The real dependency list lives in backend/requirements.txt (the only
+# Python code in this repo is under backend/ and the root-level predict.py
+# wrapper, which reuses it). Install with:
+#
+#     pip install -r backend/requirements.txt
+#
+# This file mirrors it so `pip install -r requirements.txt` from the repo
+# root also works without a judge needing to know that detail up front.
+-r backend/requirements.txt

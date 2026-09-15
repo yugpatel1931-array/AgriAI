@@ -1172,11 +1172,50 @@
       });
   }
 
+  // Real account API adapter — signup/login are sent to the backend, which
+  // hashes the password and stores it in MongoDB (never sent back).
+  function _authRequest(path, payload) {
+    return fetch(ANALYZE_API_BASE + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (response) {
+        return response.json().catch(function () { return {}; }).then(function (data) {
+          if (!response.ok) {
+            var err = new Error(data.message || "Request failed.");
+            err.code = data.error;
+            err.status = response.status;
+            throw err;
+          }
+          return data;
+        });
+      })
+      .catch(function (err) {
+        if (err instanceof TypeError && /fetch/i.test(String(err.message))) {
+          var offlineErr = new Error("The account server is unavailable. Please start the backend and try again.");
+          offlineErr.code = "SERVER_UNAVAILABLE";
+          throw offlineErr;
+        }
+        throw err;
+      });
+  }
+
+  function signUp(name, email, password) {
+    return _authRequest("/api/auth/signup", { name: name, email: email, password: password });
+  }
+
+  function logIn(email, password) {
+    return _authRequest("/api/auth/login", { email: email, password: password });
+  }
+
   ensureSeed();
 
   var api = {
     KEYS: KEYS,
     analyzeCrop: analyzeCrop,
+    signUp: signUp,
+    logIn: logIn,
     getScanHistory: getScanHistory,
     getScanById: getScanById,
     getDashboardStats: getDashboardStats,

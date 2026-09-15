@@ -10,27 +10,57 @@ from __future__ import annotations
 
 import os
 import base64
+import re
 import tempfile
 import uuid
 from datetime import datetime, timezone
 
+from dotenv import load_dotenv
+
+# Must run before any local `src.*` import -- src/database/connection.py reads
+# MONGODB_URI from the environment as soon as it's imported, so loading .env
+# any later means it silently falls back to the localhost default even when
+# a real (e.g. cloud/Atlas) URI is set in .env.
+load_dotenv()
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from src.khedut_mitr import KhedutMitrRouter
 from src.infer import LeafPredictor
 from src.config import DEFAULT_OUTPUT_DIR, VALID_EXTENSIONS
 from src.disease_advisory import get_disease_advisory
-
-load_dotenv()
+from src.irrigation import evaluate_irrigation
+from src.sustainability import compute_sustainability_score
+from src import database as db
+from src.database.models import PredictionModel, ChatHistoryModel, UserModel
 
 app = Flask(__name__)
+
+if db.is_configured():
+    try:
+        db.init_db()
+        app.logger.info("MongoDB persistence enabled (db=%s)", db.get_db().name)
+    except Exception:
+        app.logger.exception(
+            "MONGODB_URI is set but the database could not be reached; "
+            "continuing without persistence."
+        )
 ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5500,http://127.0.0.1:5500"
+        # A wider default set of common local static-server ports, since the
+        # launcher script (start.bat) auto-picks whichever of these is free
+        # on the machine it's run on (5500 is VS Code Live Server's default
+        # and is often already taken by it).
+        "http://localhost:5173,http://127.0.0.1:5173,"
+        "http://localhost:5500,http://127.0.0.1:5500,"
+        "http://localhost:5501,http://127.0.0.1:5501,"
+        "http://localhost:5502,http://127.0.0.1:5502,"
+        "http://localhost:8080,http://127.0.0.1:8080,"
+        "http://localhost:3000,http://127.0.0.1:3000"
     ).split(",")
     if origin.strip()
 ]
@@ -68,6 +98,87 @@ def split_prediction_class(predicted_class: str):
     return crop, disease
 
 
+# The Crop Type dropdown on the scan form offers more crops than the trained
+# model actually knows. Map each supported hint to the crop-name prefix(es)
+# used in the model's class labels (e.g. "Corn___..." / "Corn_(maize)___...").
+# Hints not listed here (Wheat, Cotton, Rice) aren't in the training data at
+# all, so we're upfront about that instead of silently mislabeling the crop.
+CROP_HINT_MODEL_MAP = {
+    "tomato": ["Tomato"],
+    "potato": ["Potato"],
+    "corn": ["Corn", "Corn (maize)"],
+    # Closest available class -- bell pepper, not chilli pepper -- so this
+    # match is approximate, not a species-exact identification.
+    "chilli": ["Pepper, bell", "Pepper bell", "Pepper"],
+}
+UNSUPPORTED_CROP_HINTS = {"wheat", "cotton", "rice"}
+
+
+def apply_crop_hint(prediction: dict, crop_hint: str):
+    """Use an optional farmer-provided crop hint to sanity-check the model's
+    guess. This never invents a class the model didn't already propose --
+    it only re-ranks among the model's own top-k candidates, or flags a
+    mismatch so the farmer isn't misled by a confident-looking wrong answer.
+    """
+    info = {
+        "cropHint": crop_hint or None,
+        "cropHintSupported": None,
+        "cropHintMatched": False,
+        "cropMismatch": False,
+        "cropMismatchMessage": None,
+    }
+    if not crop_hint:
+        return prediction, info
+
+    key = crop_hint.strip().lower()
+    top_k = prediction.get("top_k") or [{"class": prediction["predicted_class"], "confidence": prediction["confidence"]}]
+
+    if key in UNSUPPORTED_CROP_HINTS:
+        info["cropHintSupported"] = False
+        info["cropMismatch"] = True
+        info["cropMismatchMessage"] = (
+            f"The AI model isn't trained on {crop_hint} yet, so this is its best guess from the "
+            "crops it does recognize (tomato, potato, corn, apple, grape, cherry, bell pepper). "
+            "Treat this diagnosis as unreliable for your crop."
+        )
+        return prediction, info
+
+    aliases = CROP_HINT_MODEL_MAP.get(key)
+    info["cropHintSupported"] = aliases is not None
+    if not aliases:
+        # Unrecognized or "Other" hint -- nothing to cross-check against.
+        return prediction, info
+
+    def crop_matches(class_name: str) -> bool:
+        crop_part = class_name.split("___", 1)[0].replace("_", " ").strip().lower()
+        return any(crop_part == alias.lower() for alias in aliases)
+
+    if crop_matches(top_k[0]["class"]):
+        info["cropHintMatched"] = True
+        return prediction, info
+
+    for candidate in top_k[1:]:
+        if crop_matches(candidate["class"]):
+            promoted = dict(prediction)
+            promoted["predicted_class"] = candidate["class"]
+            promoted["confidence"] = candidate["confidence"]
+            info["cropHintMatched"] = True
+            info["cropMismatch"] = True
+            info["cropMismatchMessage"] = (
+                f"The model's top guess wasn't {crop_hint}, so we used its next-best match for "
+                f"{crop_hint} instead (confidence {candidate['confidence']:.0%})."
+            )
+            return promoted, info
+
+    fallback_crop, _ = split_prediction_class(top_k[0]["class"])
+    info["cropMismatch"] = True
+    info["cropMismatchMessage"] = (
+        f"This photo doesn't look like {crop_hint} to the AI -- its top guess was {fallback_crop}. "
+        "Double-check the crop selection or retake the photo."
+    )
+    return prediction, info
+
+
 def calculate_risk(disease: str, confidence: float) -> str:
     # This is an action-priority label based on model confidence, not a
     # measurement of biological disease severity.
@@ -92,6 +203,18 @@ def _image_data_url(path: str) -> str:
     return f"data:{mime};base64,{encoded}"
 
 
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def _public_user(doc: dict) -> dict:
+    """Never send password_hash or raw Mongo internals to the browser."""
+    return {
+        "id": str(doc.get("_id")),
+        "name": doc.get("name"),
+        "email": doc.get("email"),
+    }
+
+
 @app.get("/api/health")
 def health():
     return jsonify({
@@ -111,7 +234,122 @@ def health():
         "model": os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
         "ml_model": os.path.basename(MODEL_PATH),
         "ml_model_exists": os.path.exists(MODEL_PATH),
+        "database_configured": db.is_configured(),
+        "database_connected": db.ping_db() if db.is_configured() else False,
     })
+
+
+@app.post("/api/irrigation")
+def irrigation():
+    """Bonus Module B — Smart Irrigation. See src/irrigation.py for the
+    published decision logic and its validation method."""
+    data = request.get_json(silent=True) or {}
+    try:
+        moisture = float(data.get("moisture_pct"))
+        rain_prob = float(data.get("rain_probability_pct"))
+    except (TypeError, ValueError):
+        return jsonify({
+            "error": "INVALID_INPUT",
+            "message": "moisture_pct and rain_probability_pct (numbers, 0-100) are required.",
+        }), 400
+
+    result = evaluate_irrigation(
+        moisture,
+        rain_prob,
+        crop=data.get("crop", "Tomato"),
+        growth_stage=data.get("growth_stage", "Vegetative"),
+    )
+    return jsonify(result)
+
+
+@app.post("/api/sustainability")
+def sustainability():
+    """Bonus Module D — Sustainability Score. See src/sustainability.py for
+    the published, exact scoring formula."""
+    data = request.get_json(silent=True) or {}
+    result = compute_sustainability_score(
+        irrigation_method=data.get("irrigation_method", "drip"),
+        advice_followed_pct=float(data.get("advice_followed_pct", 100.0)),
+        disease_free_scan_pct=data.get("disease_free_scan_pct"),
+        rotated_from_different_family=bool(data.get("rotated_from_different_family", True)),
+        crop_diversity=int(data.get("crop_diversity", 1)),
+        uses_organic_compost=bool(data.get("uses_organic_compost", False)),
+        mulching=bool(data.get("mulching", False)),
+        soil_type=data.get("soil_type", "Loamy"),
+        pesticide_use=data.get("pesticide_use", "moderate"),
+    )
+    return jsonify(result)
+
+
+@app.post("/api/auth/signup")
+def signup():
+    """Create a farmer account. Password is hashed before it ever touches the database."""
+    if not db.is_configured():
+        return jsonify({
+            "error": "ACCOUNT_STORAGE_NOT_CONFIGURED",
+            "message": "Sign-up requires the server to have MONGODB_URI configured. You can still continue as a guest.",
+        }), 503
+
+    data = request.get_json(silent=True) or {}
+    name = (data.get("name") or "").strip()
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+
+    if not name:
+        return jsonify({"error": "NAME_REQUIRED", "message": "Please enter your name."}), 400
+    if not EMAIL_RE.match(email):
+        return jsonify({"error": "INVALID_EMAIL", "message": "Please enter a valid email address."}), 400
+    if len(password) < 6:
+        return jsonify({"error": "WEAK_PASSWORD", "message": "Password must be at least 6 characters."}), 400
+
+    users = db.get_users()
+    if users.find_one({"email": email}):
+        return jsonify({
+            "error": "EMAIL_EXISTS",
+            "message": "An account with this email already exists. Please sign in instead.",
+        }), 409
+
+    doc = UserModel(name=name, email=email, password_hash=generate_password_hash(password)).model_dump()
+    try:
+        result = users.insert_one(doc)
+    except Exception as exc:
+        # Covers a duplicate-key race (two signups for the same email at once)
+        # and any other insert failure.
+        if "duplicate key" in str(exc).lower():
+            return jsonify({
+                "error": "EMAIL_EXISTS",
+                "message": "An account with this email already exists. Please sign in instead.",
+            }), 409
+        app.logger.exception("Signup failed")
+        return jsonify({"error": "SIGNUP_FAILED", "message": "Could not create the account right now."}), 500
+
+    doc["_id"] = result.inserted_id
+    return jsonify({"user": _public_user(doc)}), 201
+
+
+@app.post("/api/auth/login")
+def login():
+    """Verify credentials against the stored (hashed) password. Never returns the hash."""
+    if not db.is_configured():
+        return jsonify({
+            "error": "ACCOUNT_STORAGE_NOT_CONFIGURED",
+            "message": "Sign-in requires the server to have MONGODB_URI configured. You can still continue as a guest.",
+        }), 503
+
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+
+    if not email or not password:
+        return jsonify({"error": "CREDENTIALS_REQUIRED", "message": "Email and password are required."}), 400
+
+    user = db.get_users().find_one({"email": email})
+    if not user or not check_password_hash(user.get("password_hash", ""), password):
+        return jsonify({"error": "INVALID_CREDENTIALS", "message": "Incorrect email or password."}), 401
+    if not user.get("is_active", True):
+        return jsonify({"error": "ACCOUNT_DISABLED", "message": "This account has been disabled."}), 403
+
+    return jsonify({"user": _public_user(user)}), 200
 
 
 @app.post("/api/analyze")
@@ -138,7 +376,10 @@ def analyze():
             uploaded.save(temp_file)
             temp_path = temp_file.name
 
-        prediction = get_predictor().predict(temp_path, topk=3)
+        crop_hint = (request.form.get("cropHint") or "").strip()
+        # Widen top-k when a hint is given so there's something to cross-check against.
+        prediction = get_predictor().predict(temp_path, topk=5 if crop_hint else 3)
+        prediction, crop_hint_info = apply_crop_hint(prediction, crop_hint)
         predicted_class = prediction["predicted_class"]
         confidence = float(prediction["confidence"])
         crop, disease = split_prediction_class(predicted_class)
@@ -185,6 +426,24 @@ def analyze():
             "gradcamAvailable": bool(gradcam_data_url),
             "demo": False,
         }
+        response.update(crop_hint_info)
+
+        if db.is_configured():
+            try:
+                doc = PredictionModel(
+                    crop=crop,
+                    disease=disease,
+                    confidence=confidence,
+                    image_path=filename,
+                    model_class=predicted_class,
+                    model_architecture="EfficientNet-B0",
+                    risk=risk,
+                    top_k=prediction.get("top_k", []),
+                ).model_dump()
+                db.get_predictions().insert_one(doc)
+            except Exception:
+                app.logger.exception("Failed to persist prediction; continuing without it")
+
         return jsonify(response), 200
 
     except RuntimeError as exc:
@@ -221,12 +480,28 @@ def chat():
 
     try:
         assistant = get_assistant()
+        resolved_language = language if language in {"en", "hi", "gu"} else "en"
         answer = assistant.ask(
             question=question,
             context=context,
             history=history,
-            language=language if language in {"en", "hi", "gu"} else "en",
+            language=resolved_language,
         )
+
+        if db.is_configured():
+            try:
+                doc = ChatHistoryModel(
+                    message=question,
+                    response=answer,
+                    provider=assistant.last_provider,
+                    model=assistant.last_model,
+                    language=resolved_language,
+                    context=context,
+                ).model_dump()
+                db.get_chat_history().insert_one(doc)
+            except Exception:
+                app.logger.exception("Failed to persist chat history; continuing without it")
+
         return jsonify({
             "answer": answer,
             "model": assistant.last_model or "unknown",

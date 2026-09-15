@@ -5282,3 +5282,196 @@ input[type="range"] {
 [data-theme="dark"] .sust-gauge-bg {
   stroke: rgba(255, 255, 255, 0.12);
 }
+
+
+/* VASUDHA final brand + farmer-friendly polish */
+.brand-logo {
+  object-fit: contain;
+  border-radius: 9px;
+  background: #fff;
+  display: block;
+  flex: 0 0 auto;
+}
+.vasudha-brand-section {
+  padding: 1.25rem 0 0.5rem;
+}
+.vasudha-brand-card {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-surface);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+}
+.vasudha-logo-panel {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  padding: 0.5rem;
+  border-radius: 16px;
+  background: #fff;
+}
+.vasudha-logo-panel img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  display: block;
+}
+.footer-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+}
+.footer-identity img {
+  width: 155px;
+  max-width: 42vw;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  background: #fff;
+}
+.footer-identity strong {
+  font-weight: 800;
+}
+.footer-identity span {
+  color: var(--text-subtle);
+}
+@media (max-width: 720px) {
+  .vasudha-brand-card {
+    grid-template-columns: 1fr;
+  }
+  .vasudha-logo-panel img {
+    max-width: 230px;
+  }
+  .footer-identity {
+    align-items: flex-start;
+  }
+  .footer-identity img {
+    width: 120px;
+  }
+}
+
+/* ==========================================================================
+   VASUDHA FINAL POLISH — sidebar brand, dark-mode identity, readable states
+   ========================================================================== */
+.sidebar-brand {
+  color: #FFFFFF !important;
+  min-width: 0;
+}
+.sidebar-brand:hover,
+.sidebar-brand:focus-visible,
+.sidebar-brand:active {
+  color: #FFFFFF !important;
+  text-decoration: none;
+}
+.sidebar-brand .brand-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+}
+.sidebar-brand-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  line-height: 1.05;
+}
+.sidebar-brand-copy strong {
+  color: #FFFFFF !important;
+  font-size: 1.12rem;
+  letter-spacing: 0.015em;
+}
+.sidebar-brand-copy small {
+  margin-top: 0.18rem;
+  color: #B8E5C9 !important;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.sidebar-brand-badge {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Keep the brand story visually clear in both themes. */
+.vasudha-brand-card {
+  color: var(--text-main);
+}
+.vasudha-brand-card h2,
+.vasudha-brand-card p {
+  color: var(--text-main);
+}
+.vasudha-brand-card .lead {
+  color: var(--text-muted);
+}
+.vasudha-logo-panel {
+  border: 1px solid var(--border);
+}
+[data-theme="dark"] .vasudha-brand-card {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border);
+  box-shadow: var(--shadow-md);
+}
+[data-theme="dark"] .vasudha-brand-card h2,
+[data-theme="dark"] .vasudha-brand-card p {
+  color: var(--text-main);
+}
+[data-theme="dark"] .vasudha-brand-card .lead {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .vasudha-logo-panel {
+  background: #FFFFFF;
+  border-color: #365541;
+}
+[data-theme="dark"] .footer-identity {
+  border-top-color: var(--border);
+}
+[data-theme="dark"] .footer-identity span {
+  color: var(--text-muted);
+}
+
+/* Khedut Mitr connected/offline notice: readable and non-alarming in dark mode. */
+[data-theme="dark"] .khedut-mitr-msg.bot .khedut-mitr-msg-bubble {
+  color: #F4FBF6;
+}
+[data-theme="dark"] .khedut-mitr-msg.bot .khedut-mitr-msg-bubble em {
+  color: #B8D9C5 !important;
+}
+
+.sidebar-header {
+  position: relative;
+}
+.sidebar-brand {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  padding-right: 4.2rem;
+}
+.sidebar-brand-copy em {
+  display: block;
+  margin-top: 0.14rem;
+  color: #8ED8AE !important;
+  font-size: 0.55rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.15;
+  white-space: normal;
+}
+.sidebar-brand-badge {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+@media (max-width: 420px) {
+  .sidebar-brand-copy em { font-size: 0.52rem; }
+}

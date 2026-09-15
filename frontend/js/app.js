@@ -112,15 +112,7 @@
   }
 
   function brandLogo() {
-    return (
-      '<svg class="brand-logo" width="34" height="34" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<rect width="38" height="38" rx="10" fill="#2D6A4F"/>' +
-      '<path d="M19 8C25.6 11.5 29 16.5 29 23.5C26 21.5 22.5 20.5 19 20.5C15.5 20.5 12 21.5 9 23.5C9 16.5 12.4 11.5 19 8Z" fill="#52B788"/>' +
-      '<path d="M19 21V30" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>' +
-      '<path d="M19 25L23 22" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>' +
-      '<circle cx="19" cy="12" r="2.5" fill="#FFFFFF"/>' +
-      '</svg>'
-    );
+    return '<img class="brand-logo" src="assets/images/vasudha-mark.jpeg" width="36" height="36" alt="VASUDHA logo" loading="eager">';
   }
 
   function renderHeader() {
@@ -147,13 +139,13 @@
     mount.innerHTML =
       '<header class="landing-header">' +
       '<div class="container landing-nav">' +
-      '<a class="landing-brand" href="index.html">' + brandLogo() + '<span>AgriSmart AI</span></a>' +
+      '<a class="landing-brand" href="index.html">' + brandLogo() + '<span><strong>VASUDHA</strong></span></a>' +
       '<ul class="landing-links" id="landing-nav-links">' +
       '<li><a href="index.html" class="active">Home</a></li>' +
       '<li><a href="#features">Features</a></li>' +
       '<li><a href="#how-it-works">How It Works</a></li>' +
-      '<li><a href="dashboard.html">Living Farm</a></li>' +
-      '<li><a href="scan.html">AI Diagnosis</a></li>' +
+      '<li><a href="dashboard.html">My Farm</a></li>' +
+      '<li><a href="scan.html">Check Crop</a></li>' +
       '</ul>' +
       '<div class="landing-cta">' +
       authHtml +
@@ -191,9 +183,9 @@
       '<div class="sidebar-backdrop" id="sidebar-backdrop"></div>' +
       '<aside class="app-sidebar" id="app-sidebar">' +
       '  <div class="sidebar-header">' +
-      '    <a class="sidebar-brand" href="index.html" title="AgriSmart AI">' +
+      '    <a class="sidebar-brand" href="index.html" title="VASUDHA — Earth / ધરતી">' +
       '      ' + brandLogo() +
-      '      <span>AgriSmart AI</span>' +
+      '      <span class="sidebar-brand-copy"><strong>VASUDHA</strong><small>Earth • ધરતી</small><em>Rooted in Earth.</em></span>' +
       '      <span class="sidebar-brand-badge">AI 2.0</span>' +
       '    </a>' +
       '  </div>' +
@@ -323,40 +315,45 @@
         '  <div class="container">' +
         '    <div class="footer-grid">' +
         '      <div>' +
-        '        <div class="landing-brand" style="margin-bottom:0.8rem">' + brandLogo() + '<span>AgriSmart AI</span></div>' +
-        '        <p>AI-assisted foliar plant pathology and sustainable crop protection built for Indian agriculture. Instant leaf diagnosis, organic and chemical remedies, and living farm health records.</p>' +
-        '        <p style="margin-top:0.8rem;font-size:0.82rem;color:var(--text-subtle);">Smart India Hackathon Demonstration Prototype.</p>' +
+        '        <div class="landing-brand" style="margin-bottom:0.8rem">' + brandLogo() + '<span><strong>VASUDHA</strong></span></div>' +
+        '        <p>VASUDHA means <strong>Earth / ધરતી</strong> — simple AI-powered crop health help made for Indian farmers.</p>' +
+        '        <p style="margin-top:0.6rem;font-weight:800;">Rooted in Earth. Powered by Intelligence.</p>' +
+        '        <p style="margin-top:0.5rem;font-size:0.82rem;color:var(--text-subtle);">Smart India Hackathon 2026 demonstration.</p>' +
         '      </div>' +
         '      <div>' +
-        '        <h4 style="margin-bottom:0.8rem">Features</h4>' +
+        '        <h4 style="margin-bottom:0.8rem">Farmer Tools</h4>' +
         '        <div class="footer-links">' +
-        '          <a href="scan.html">AI Crop Scanner</a>' +
-        '          <a href="dashboard.html">Living Farm Health</a>' +
-        '          <a href="history.html">Scan History</a>' +
-        '          <a href="insights.html">Diagnostic Analytics</a>' +
+        '          <a href="scan.html">Check Crop</a>' +
+        '          <a href="dashboard.html">My Farm</a>' +
+        '          <a href="history.html">Crop Check History</a>' +
+        '          <a href="insights.html">Crop Health Insights</a>' +
         '        </div>' +
         '      </div>' +
         '      <div>' +
-        '        <h4 style="margin-bottom:0.8rem">Resources</h4>' +
+        '        <h4 style="margin-bottom:0.8rem">Help & Settings</h4>' +
         '        <div class="footer-links">' +
-        '          <a href="settings.html">Farmer Preferences</a>' +
-        '          <a href="login.html">Farmer Portal</a>' +
-        '          <a href="https://icar.org.in/" target="_blank" rel="noopener">ICAR Advisory Guidelines</a>' +
-        '          <a href="#how-it-works">Diagnostic Accuracy Guide</a>' +
+        '          <a href="settings.html">My Farm Settings</a>' +
+        '          <a href="login.html">Farmer Sign In</a>' +
+        '          <a href="https://icar.org.in/" target="_blank" rel="noopener">ICAR Guidelines</a>' +
+        '          <a href="#how-it-works">How the crop check works</a>' +
         '        </div>' +
         '      </div>' +
         '    </div>' +
+        '    <div class="footer-identity">' +
+        '      <img src="assets/images/vasudha-logo.jpeg" alt="VASUDHA logo" loading="lazy">' +
+        '      <div><strong>VASUDHA</strong> means <strong>Earth / ધરતી</strong>.<br><span>Rooted in Earth. Powered by Intelligence.</span></div>' +
+        '    </div>' +
         '    <div class="copyright">' +
-        '      <span>&copy; ' + new Date().getFullYear() + ' AgriSmart AI &bull; For Greener Tomorrows</span>' +
-        '      <span>Built with pride for Indian Farmers &bull; Smart India Hackathon 2026</span>' +
+        '      <span>&copy; ' + new Date().getFullYear() + ' <strong>VASUDHA</strong> &bull; Farmer-first crop care</span>' +
+        '      <span><strong>Made by Team Apex</strong> &bull; Smart India Hackathon 2026</span>' +
         '    </div>' +
         '  </div>' +
         '</footer>';
     } else {
       mount.innerHTML =
-        '<footer style="margin-top:auto;padding:1.5rem 0;border-top:1px solid var(--border);font-size:0.82rem;color:var(--text-subtle);display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;">' +
-        '  <span>AgriSmart AI &bull; Living Crop Intelligence</span>' +
-        '  <span>Demonstration System &bull; Offline Ready &bull; Smart India Hackathon 2026</span>' +
+        '<footer style="margin-top:auto;padding:1.2rem 0;border-top:1px solid var(--border);font-size:0.84rem;color:var(--text-subtle);display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;">' +
+        '  <span><strong>VASUDHA</strong> &bull; Rooted in Earth. Powered by Intelligence.</span>' +
+        '  <span><strong>Made by Team Apex</strong> &bull; Smart India Hackathon 2026</span>' +
         '</footer>';
     }
   }

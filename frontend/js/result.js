@@ -227,6 +227,15 @@
       );
     }).join("");
 
+    var cropMismatchBanner = result.cropMismatch && result.cropMismatchMessage
+      ? (
+        '<div style="display:flex;align-items:flex-start;gap:0.7rem;background:rgba(217,119,6,0.1);border:1.5px solid rgba(217,119,6,0.4);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.4rem;">' +
+        '  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.2" style="flex-shrink:0;margin-top:0.1rem;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+        '  <span style="font-size:0.88rem;color:#7C4A03;line-height:1.45;"><strong>Crop check:</strong> ' + AgriApp.escapeHtml(result.cropMismatchMessage) + '</span>' +
+        '</div>'
+      )
+      : '';
+
     var organicRecommendations = result.organicRecommendations || [];
     var chemicalRecommendations = result.chemicalRecommendations || [];
     var preventionItems = result.prevention || [];
@@ -263,6 +272,8 @@
       '  <h1 style="font-size:2.2rem;margin-bottom:0.2rem;">Foliar Health Report</h1>' +
       '  <p style="color:var(--text-muted);font-size:0.95rem;">Scanned on ' + AgriApp.formatDate(result.scannedAt) + '</p>' +
       '</div>' +
+
+      cropMismatchBanner +
 
       '<div class="result-split">' +
       '  <!-- LEFT COLUMN: IMAGE INSPECTOR, CALCULATOR, CHATBOT -->' +
@@ -516,7 +527,7 @@
       '      </div>' +
       '    </div>' +
       '    <div class="rx-header-text">' +
-      '      <div class="rx-gov-title" style="letter-spacing:0.06em;color:#1B4332;font-weight:800;">AGRISMART AI &bull; INTELLIGENT CROP HEALTH PLATFORM</div>' +
+      '      <div class="rx-gov-title" style="letter-spacing:0.06em;color:#1B4332;font-weight:800;">VASUDHA &bull; INTELLIGENT CROP HEALTH PLATFORM</div>' +
       '      <div class="rx-kvk-title" style="color:#4B5563;font-weight:600;">Field Diagnostic &amp; Agronomic Advisory System</div>' +
       '      <div class="rx-doc-title" style="color:#1B4332;font-size:1.35rem;font-weight:900;">CROP HEALTH &amp; FIELD TREATMENT REPORT</div>' +
       '      <div class="rx-sub-badge" style="color:#2D6A4F;font-weight:700;">DIGITAL REPORT &bull; REAL-TIME FARM INTELLIGENCE</div>' +
@@ -536,7 +547,7 @@
       '    <div class="rx-meta-cell"><label>Registered Farmer:</label><strong>' + AgriApp.escapeHtml(farmerName) + '</strong></div>' +
       '    <div class="rx-meta-cell"><label>Farm:</label><strong>' + AgriApp.escapeHtml(farmName) + '</strong></div>' +
       '    <div class="rx-meta-cell"><label>Field Measurements:</label><strong>Not supplied by this image scan</strong></div>' +
-      '    <div class="rx-meta-cell"><label>AI Vision Model:</label><strong>AgriSmart AI ' + AgriApp.escapeHtml(result.modelArchitecture || 'EfficientNet-B0') + ' (' + pct + '% Confidence)</strong></div>' +
+      '    <div class="rx-meta-cell"><label>AI Vision Model:</label><strong>VASUDHA ' + AgriApp.escapeHtml(result.modelArchitecture || 'EfficientNet-B0') + ' (' + pct + '% Confidence)</strong></div>' +
       '  </div>' +
 
       '  <div class="rx-section">' +
@@ -632,12 +643,12 @@
 
       '  <div class="rx-footer-grid">' +
       '    <div class="rx-sig-box">' +
-      '      <div class="rx-sig-line">AgriSmart AI Diagnostic Engine</div>' +
-      '      <small>Automated Plant Vision &bull; AgriSmart AI Platform</small>' +
+      '      <div class="rx-sig-line">VASUDHA Diagnostic Engine</div>' +
+      '      <small>Automated Plant Vision &bull; VASUDHA Platform</small>' +
       '    </div>' +
       '    <div class="rx-seal-box">' +
       '      <div class="rx-seal-stamp" style="border:2px solid #2D6A4F;color:#1B4332;">' +
-      '        <span>AGRISMART AI</span>' +
+      '        <span>VASUDHA</span>' +
       '        <strong>AI RECORD</strong>' +
       '        <small>Digital Scan #' + AgriApp.escapeHtml(reportId) + '</small>' +
       '      </div>' +
@@ -649,7 +660,7 @@
       '  </div>' +
 
       '  <div class="rx-legal-notice" style="font-size:0.72rem;color:#6B7280;text-align:center;margin-top:1rem;padding-top:0.6rem;border-top:1px dashed #D1D5DB;">' +
-      '    <strong>AgriSmart AI Verified Digital Record (ID: ' + AgriApp.escapeHtml(reportId) + '):</strong> Generated from the AgriSmart AI image-model screening result. This record is not a laboratory diagnosis or a substitute for local agricultural advice.' +
+      '    <strong>VASUDHA Verified Digital Record (ID: ' + AgriApp.escapeHtml(reportId) + '):</strong> Generated from the VASUDHA image-model screening result. This record is not a laboratory diagnosis or a substitute for local agricultural advice.' +
       '  </div>' +
       '</div>' +
 
@@ -658,7 +669,7 @@
       '  <div class="modal-card" style="max-width:880px;width:95%;max-height:92vh;overflow-y:auto;padding:1.5rem;">' +
       '    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.8rem;border-bottom:1px solid var(--border);">' +
       '      <div>' +
-      '        <h3 style="margin:0;font-size:1.25rem;">AgriSmart AI Field Health &amp; Treatment Report</h3>' +
+      '        <h3 style="margin:0;font-size:1.25rem;">VASUDHA Field Health &amp; Treatment Report</h3>' +
       '        <span style="font-size:0.8rem;color:var(--text-muted);">Print-Ready Document Preview</span>' +
       '      </div>' +
       '      <div style="display:flex;gap:0.6rem;">' +

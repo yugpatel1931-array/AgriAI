@@ -21,7 +21,9 @@ All JSON request bodies use UTF-8. Multipart is used only for image upload.
 | Field | Type | Notes |
 | --- | --- | --- |
 | `image` | file | JPG, JPEG, PNG, or WEBP. Suggested max 10 MB. |
-| `cropHint` | string, optional | Farmer-selected crop if available. |
+| `cropHint` | string, optional | Farmer-selected crop from the scan form dropdown (e.g. `Tomato`, `Potato`, `Corn`, `Chilli`, `Wheat`, `Cotton`, `Rice`, `Other`). Optional — omitting it just returns the model's raw top prediction. |
+
+**Crop hint behavior:** the model is only trained on Tomato, Potato, Corn (maize), Apple, Grape, Cherry, and bell Pepper (PlantVillage classes). When `cropHint` is one of those, the backend cross-checks it against the model's own top-k candidates: if the top guess already matches, nothing changes; if a lower-ranked candidate matches, that one is promoted instead; if none match, the model's real top prediction is kept but flagged as a mismatch. `Wheat`, `Cotton`, and `Rice` aren't in the training data at all, so those always come back flagged as unsupported rather than silently mislabeled. `Chilli` is matched against bell pepper as the closest available class (not a species-exact match).
 
 **Success response:** `200`
 
@@ -42,11 +44,26 @@ All JSON request bodies use UTF-8. Multipart is used only for image upload.
     "Improve airflow between plants."
   ],
   "scannedAt": "2026-09-11T12:00:00.000Z",
-  "imageUrl": "/api/scans/scan_01HXYZ/image"
+  "imageUrl": "/api/scans/scan_01HXYZ/image",
+  "cropHint": "Tomato",
+  "cropHintSupported": true,
+  "cropHintMatched": true,
+  "cropMismatch": false,
+  "cropMismatchMessage": null
 }
 ```
 
 `confidence` is a 0–1 float. `risk` is one of `Low`, `Moderate`, `High`.
+
+The `cropHint*` / `cropMismatch*` fields are only meaningful when `cropHint` was sent in the request; they're `null`/`false` when it wasn't.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `cropHint` | string or null | Echoes the hint sent in the request. |
+| `cropHintSupported` | bool or null | Whether the model has any classes for that crop at all. `null` when no hint was sent. |
+| `cropHintMatched` | bool | Whether a class for the hinted crop was found among the model's top-k candidates. |
+| `cropMismatch` | bool | `true` if the hint and the model's result disagree in any way (unsupported crop, promoted a lower-ranked candidate, or no match found at all). |
+| `cropMismatchMessage` | string or null | Farmer-facing explanation when `cropMismatch` is `true`. |
 
 **Errors**
 

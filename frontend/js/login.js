@@ -43,26 +43,53 @@
         event.preventDefault();
         var name = (document.getElementById("auth-name").value || "").trim();
         var email = (document.getElementById("auth-email").value || "").trim();
+        var password = document.getElementById("auth-password").value || "";
 
-        AgriApp.setAuth({ signedIn: true, name: name, email: email, demo: true });
-        if (name) {
-          AgriAPI.saveSettings({ farmerName: name });
+        var submitBtn = loginForm.querySelector("button[type=submit]");
+        if (submitBtn) submitBtn.disabled = true;
+
+        function proceedSignedIn(user) {
+          AgriApp.setAuth({ signedIn: true, id: user.id, name: user.name, email: user.email, demo: false });
+          if (user.name) {
+            AgriAPI.saveSettings({ farmerName: user.name });
+          }
+          AgriApp.renderHeader();
+
+          authPanel.classList.add("hidden");
+          onboardPanel.classList.remove("hidden");
+
+          var settings = AgriAPI.getSettings();
+          var obFarmer = document.getElementById("onboard-farmer");
+          var obFarm = document.getElementById("onboard-farm");
+          var obLoc = document.getElementById("onboard-location");
+          var obCrops = document.getElementById("onboard-crops");
+
+          if (obFarmer) obFarmer.value = user.name || settings.farmerName || "";
+          if (obFarm) obFarm.value = settings.farmName || "";
+          if (obLoc) obLoc.value = settings.location || "";
+          if (obCrops) obCrops.value = settings.primaryCrops || "";
         }
-        AgriApp.renderHeader();
 
-        authPanel.classList.add("hidden");
-        onboardPanel.classList.remove("hidden");
-
-        var settings = AgriAPI.getSettings();
-        var obFarmer = document.getElementById("onboard-farmer");
-        var obFarm = document.getElementById("onboard-farm");
-        var obLoc = document.getElementById("onboard-location");
-        var obCrops = document.getElementById("onboard-crops");
-
-        if (obFarmer) obFarmer.value = name || settings.farmerName || "";
-        if (obFarm) obFarm.value = settings.farmName || "";
-        if (obLoc) obLoc.value = settings.location || "";
-        if (obCrops) obCrops.value = settings.primaryCrops || "";
+        // Try to create the account first; if that email is already
+        // registered, fall back to signing in with the same credentials.
+        AgriAPI.signUp(name, email, password)
+          .then(function (data) {
+            proceedSignedIn(data.user);
+          })
+          .catch(function (err) {
+            if (err.code === "EMAIL_EXISTS") {
+              return AgriAPI.logIn(email, password).then(function (data) {
+                proceedSignedIn(data.user);
+              });
+            }
+            throw err;
+          })
+          .catch(function (err) {
+            AgriApp.toast(err.message || "Could not sign in. Please try again.");
+          })
+          .then(function () {
+            if (submitBtn) submitBtn.disabled = false;
+          });
       });
     }
 
