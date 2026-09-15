@@ -98,20 +98,18 @@ def split_prediction_class(predicted_class: str):
     return crop, disease
 
 
-# The Crop Type dropdown on the scan form offers more crops than the trained
-# model actually knows. Map each supported hint to the crop-name prefix(es)
-# used in the model's class labels (e.g. "Corn___..." / "Corn_(maize)___...").
-# Hints not listed here (Wheat, Cotton, Rice) aren't in the training data at
-# all, so we're upfront about that instead of silently mislabeling the crop.
+# Crop hints supported by the trained model. Each hint maps to the crop-name
+# prefix used in the model's class labels.
 CROP_HINT_MODEL_MAP = {
-    "tomato": ["Tomato"],
+    "apple": ["Apple"],
     "potato": ["Potato"],
+    "grape": ["Grape"],
     "corn": ["Corn", "Corn (maize)"],
-    # Closest available class -- bell pepper, not chilli pepper -- so this
-    # match is approximate, not a species-exact identification.
-    "chilli": ["Pepper, bell", "Pepper bell", "Pepper"],
+    "cherry": ["Cherry_(including_sour)", "Cherry (including sour)"],
+    "pepper, bell": ["Pepper,_bell", "Pepper, bell"],
+    "tomato": ["Tomato"],
 }
-UNSUPPORTED_CROP_HINTS = {"wheat", "cotton", "rice"}
+UNSUPPORTED_CROP_HINTS = set()
 
 
 def apply_crop_hint(prediction: dict, crop_hint: str):
