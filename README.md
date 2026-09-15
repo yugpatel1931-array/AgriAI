@@ -40,6 +40,18 @@ This repo has two independent parts:
 | [`backend/`](backend/README.md) | Flask API — leaf disease classifier (PyTorch/EfficientNet-B0), crop/irrigation recommendations, weather, chat assistant, and optional MongoDB persistence for accounts & history | `cd backend && pip install -r requirements.txt && python api_server.py` |
 | [`frontend/`](frontend/README.md) | Static HTML/CSS/vanilla JS client — no build step, no npm | `cd frontend && python -m http.server 5500` |
 
+## Supported Crop Types
+
+The crop-type selector in the disease detection interface supports these 7 crops:
+
+1. Apple
+2. Potato
+3. Grape
+4. Corn / Maize
+5. Cherry
+6. Bell Pepper
+7. Tomato
+
 ## Quick start
 
 **Windows — one command:** double-click `start.bat` (or run it from a terminal)
@@ -159,7 +171,7 @@ check (`python -m src.irrigation --validate`) as its validation method.
 
 ## Demo video
 
-https://drive.google.com/file/d/1Ka1JBE2OU4tV4tLJLo34dOX1FH7pZ3ya/view?usp=drivesdk
+https://drive.google.com/file/d/1B8qLbCFEr-MqcUR5rQijfAi3jAx_Dk1y/view?usp=drivesdk
 
 ## Originality declaration
 
