@@ -1,8 +1,8 @@
 * text=auto eol=lf
 
-*.bat text eol=crlf
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.pt binary
 *.pyc binary
+*.bat text eol=crlf
