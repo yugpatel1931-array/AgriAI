@@ -1302,7 +1302,7 @@
         // still works if the local API is not running or Gemini is unavailable.
         if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
         var fallback = getBotResponse(text, customContext || { crop: cropName });
-        addMessage("bot", fallback + "\n\n*Gemini is currently unavailable, so Khedut Mitr used its offline guidance.*", true);
+        addMessage("bot", fallback + "\n\n*Connected AI is temporarily unavailable. Khedut Mitr is showing basic offline guidance. Please try again in a moment.*", true);
         if (global.console) console.warn("Gemini Khedut Mitr unavailable:", error);
       } finally {
         sendBtn.disabled = false;
@@ -1416,7 +1416,7 @@
           activeAddMessage("bot", reply, true);
         } catch (error) {
           if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-          activeAddMessage("bot", getBotResponse(questionText, context) + "\n\n*Gemini is currently unavailable, so Khedut Mitr used its offline guidance.*", true);
+          activeAddMessage("bot", getBotResponse(questionText, context) + "\n\n*Connected AI is temporarily unavailable. Khedut Mitr is showing basic offline guidance. Please try again in a moment.*", true);
           if (global.console) console.warn("Gemini Khedut Mitr unavailable:", error);
         }
       })();
